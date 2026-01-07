@@ -31,3 +31,5 @@ This standard defines how standards are created, updated, and enforced.
 - Required checks: lint, type check, tests, security scans, SBOM, contract tests
 - Production deploys require manual approval
 - Tier-based enforcement uses the Service Tiering standard
+- Guardrail workflow (`.github/workflows/pre-merge-guardrails.yml`) must pass on every PR; it validates the latest release-readiness run and ensures service specs/runbooks/README files exist before merging.
+- CODEOWNERS and the PR template enforce required reviewers and checklist completion per tier before branch protection allows the merge.

@@ -16,6 +16,8 @@ Use this checklist to create a new service that complies with all standards.
 - [ ] pytest + hypothesis configured
 - [ ] Schemathesis contract tests configured
 
+- [ ] Guardrail workflow (`.github/workflows/pre-merge-guardrails.yml`) passes on the service repo and release readiness checks are in place
+
 ## Security and Compliance
 
 - [ ] Secret Manager integration
