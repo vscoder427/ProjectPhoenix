@@ -15,3 +15,4 @@ This standard defines onboarding and ownership practices.
 ## Knowledge Transfer
 
 - Key runbooks and ADRs reviewed quarterly
+- Include the [Service Ownership Checklist](../templates/service-ownership-checklist.md) and recent Decision Records (Lite) when onboarding new contributors so ownership and risks are clear.
