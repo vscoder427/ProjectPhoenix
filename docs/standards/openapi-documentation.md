@@ -17,3 +17,4 @@ This standard defines API documentation requirements.
 ## Change Management
 
 - Breaking changes require updated OpenAPI and migration guide
+- Link spec updates to the release readiness checklist and update the OpenAPI version entry before cutting a release.
