@@ -8,6 +8,7 @@ This standard defines evidence collection for audits.
 - Store security scan results per release
 - Keep BAA inventory and risk analysis reports
 - Store GDPR/CCPA artifacts (DSAR logs, deletion verification, consent records)
+- Attach audit evidence references (logs, scan results, DSARs) to the release readiness checklist so reviewers can confirm completeness per release.
 
 ## Review Cadence
 
