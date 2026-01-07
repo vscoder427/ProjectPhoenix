@@ -15,3 +15,4 @@ This standard defines API lifecycle management and compatibility.
 ## Review
 
 - API changes require design review before implementation
+- Document new versions and migration guides in the release readiness checklist and service spec so users know the compatibility story during the next deploy.
