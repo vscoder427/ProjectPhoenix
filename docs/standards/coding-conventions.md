@@ -16,6 +16,13 @@ This standard defines coding conventions for all Employa services.
 - `api/app/main.py` contains app initialization only
 - Feature code lives in `api/app/routes/`, `api/app/services/`, `api/app/models/`
 
+## Naming Conventions
+
+- Modules and packages use `snake_case` filenames and directories to stay idiomatic to Python.
+- Classes and Pydantic models follow `PascalCase`, while functions, methods, and runtime variables stay in `snake_case`.
+- Constants and enums that represent fixed values should use `UPPER_SNAKE_CASE`.
+- Documentation files follow the broader Employa naming system: standard docs are `kebab-case.md`, enterprise-wide standards use `UPPER_SNAKE_CASE.md`, and all index/landing docs remain `README.md`.
+
 ## FastAPI Patterns
 
 - Use dependency injection for auth and shared resources

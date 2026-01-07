@@ -26,3 +26,7 @@ Run `pwsh -File scripts/build-release-checklist.ps1 -ServiceName golden-service-
 ## Observability
 
 Instrumentation is wired with `opentelemetry-instrumentation-fastapi` and the structured logger defined in `api/app/logging.py`. Read the SPIRE/Envoy ops guide (`docs/standards/cloudrun-mtls-ops.md`) for monitoring requirements.
+
+## Language & Tone
+
+Follow the enterprise Language & Tone (Recovery Sensitive) standard (`../../docs/standards/language-tone.md`) when writing UI copy, notifications, runbooks, and documentation so the service stays consistent with Employa’s brand voice.

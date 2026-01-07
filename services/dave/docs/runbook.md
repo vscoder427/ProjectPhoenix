@@ -22,3 +22,8 @@
 - [ ] Capture timeline in `docs/decisions.md`
 - [ ] Apply mitigation and update runbook
 - [ ] Schedule post-mortem with lessons learned
+
+## Language & Tone
+
+- Reinforce recovery-sensitive language in any runbook updates, incident summaries, or operator notes.
+- Reference the shared standard at `../../docs/standards/language-tone.md` for preferred terminology, forbidden language, and tone guidance before publishing updates.

@@ -59,6 +59,14 @@ jobs:
           sys.exit(0)
           PY
 
+      - name: Validate branch and commit standards
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python scripts/validate-branch-and-commits.py
+
       - name: Validate service documentation for modified services
         env:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}

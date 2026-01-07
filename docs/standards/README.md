@@ -73,3 +73,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 - [Standards Governance and Enforcement](standards-governance.md)
 - [Release Readiness Checklist](operations/release-readiness.md)
 - [ADR Standard](adr-standard.md)
+
+## Brand & Tone
+
+- [Language & Tone (Recovery Sensitive)](language-tone.md)
