@@ -17,3 +17,4 @@ This standard defines code quality tooling for all Python services.
 ## Strictness
 
 - CI fails on lint, type errors, and coverage thresholds
+- Document any tolerance or temporary overrides in the release readiness checklist so reviewers can track when formatting rules are intentionally relaxed.
