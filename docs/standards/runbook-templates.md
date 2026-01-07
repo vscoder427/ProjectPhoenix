@@ -9,6 +9,7 @@ This standard provides templates for service runbooks.
 - [ ] Run smoke tests
 - [ ] Approve production deploy
 - [ ] Verify key endpoints
+- Release deploy checklist should be completed as part of the [Release Readiness Checklist](release-readiness.md).
 
 ## Rollback Checklist
 
