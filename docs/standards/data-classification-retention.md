@@ -16,6 +16,8 @@ This standard defines how data is classified, stored, retained, and deleted acro
 - Internal: Access controlled, logged
 - Public: No special handling requirements
 
+- Reference the [Data Classification Mapping](data-classification-mapping.md) standard when creating or updating classifications.
+
 ## Retention Policy
 
 - PHI and PII retention must follow documented policy per service
@@ -35,3 +37,8 @@ This standard defines how data is classified, stored, retained, and deleted acro
 - No PHI in logs
 - PII redacted or masked in logs
 - Logs follow retention policy by data class
+
+## Data Inventory and Review
+
+- Maintain a data inventory that links owners, classifications, retention timelines, and legal holds (see [Data Governance](data-governance.md)).
+- Review inventory and retention policies annually or when business requirements change.
