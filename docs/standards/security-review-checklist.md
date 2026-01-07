@@ -11,3 +11,5 @@ Use this checklist before approving a service build or major change.
 - [ ] SBOM generated and stored
 - [ ] Logging redaction verified
 - [ ] Incident response and runbook updated
+
+> Document the security review outcome in the release readiness checklist and attach the checklist to the release notes.
