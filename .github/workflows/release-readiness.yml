@@ -1,0 +1,40 @@
+name: Release Readiness Checklist
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Name of the service (folder under docs/releases)'
+        required: true
+      release_tag:
+        description: 'Release tag (e.g., v1.2.3)'
+        required: true
+  release:
+    types: [published]
+
+jobs:
+  build-checklist:
+    runs-on: windows-latest
+    env:
+      SERVICE_NAME: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.service || github.event.release?.name || 'service' }}
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || github.event.release?.tag_name || 'manual' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release checklist
+        id: generate
+        shell: pwsh
+        run: |
+          $path = ./scripts/build-release-checklist.ps1 -ServiceName "$env:SERVICE_NAME" -ReleaseTag "$env:RELEASE_TAG"
+          echo "checklist_path=$path" | Out-File -FilePath "$env:GITHUB_OUTPUT" -Encoding utf8 -Append
+          Write-Host "Checklist stored at $path"
+
+      - name: Upload release readiness artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-readiness
+          path: ${{ steps.generate.outputs.checklist_path }}
+
+      - name: Output metadata
+        run: |
+          echo "Release readiness checklist generated for ${SERVICE_NAME} @ ${RELEASE_TAG}"

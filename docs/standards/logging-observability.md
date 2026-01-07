@@ -12,6 +12,7 @@ This standard defines required logging, metrics, tracing, and alerting across Em
 
 - Full RED/USE metrics (rate, errors, duration, utilization, saturation, errors)
 - Business KPIs tracked per service
+- Add an mTLS health dashboard that surfaces SPIRE certificate issuance rates, Envoy handshake latencies, and SPIFFE identity errors; link to this dashboard from the service runbook and release readiness checklist (see [SPIRE/Envoy mTLS Operations](cloudrun-mtls-ops.md)).
 
 ## Tracing
 
