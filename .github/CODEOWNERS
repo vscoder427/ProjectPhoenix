@@ -1,0 +1,7 @@
+# CODEOWNERS for ProjectPhoenix
+# Require platform owner (you) on every change to services or standards.
+docs/services/** @vscoder427
+services/** @vscoder427
+docs/standards/** @vscoder427
+scripts/** @vscoder427
+.github/** @vscoder427
