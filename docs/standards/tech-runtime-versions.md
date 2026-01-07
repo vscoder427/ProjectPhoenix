@@ -13,3 +13,4 @@ This standard defines runtime versions and server configuration for all services
 ## Application Server
 
 - Gunicorn with Uvicorn workers for production
+- Record runtime and framework upgrades in the release notes + readiness checklist so the governance board sees version drift.
