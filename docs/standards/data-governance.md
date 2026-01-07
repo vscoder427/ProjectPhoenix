@@ -15,3 +15,4 @@ This standard defines data lifecycle governance and audits.
 ## Data Lineage
 
 - Maintain data flow diagrams for PHI/PII
+- Feed quarterly access reviews into the enterprise risk register and confirm data lineages are reflected in the service spec and classification docs before releases.
