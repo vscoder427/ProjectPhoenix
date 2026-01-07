@@ -17,3 +17,4 @@ This standard defines how services load configuration and secrets.
 ## Environments
 
 - Separate Dev, Staging, and Prod configs
+- Tied config changes must follow the [Config Change Management](config-change-management.md) process and be recorded in the release readiness checklist.
