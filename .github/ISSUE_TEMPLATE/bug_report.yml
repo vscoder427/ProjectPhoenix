@@ -1,0 +1,145 @@
+name: Bug Report
+description: Report a bug to help us improve Employa
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out this form to help us understand and fix the issue.
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this bug?
+      options:
+        - Low (cosmetic issue, doesn't affect functionality)
+        - Medium (affects some functionality but has workaround)
+        - High (affects core functionality, no workaround)
+        - Critical (system/security issue, prevents usage)
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: If applicable, add screenshots or videos to help explain your problem.
+      placeholder: Drag and drop screenshots or videos here
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: What area of the system is affected?
+      options:
+        - Frontend/UI
+        - Backend/API
+        - Database
+        - Authentication
+        - Infrastructure
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: What environment are you using? (e.g., browser, OS, API version)
+      placeholder: e.g., Chrome 120 on Windows 11, Python 3.11, API v1.2
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: User Type
+      description: What type of user account were you using?
+      options:
+        - Not logged in
+        - Job Seeker
+        - Employer
+        - Admin
+        - API Consumer
+        - Other
+
+  - type: textarea
+    id: error-logs
+    attributes:
+      label: Error Logs
+      description: If you have any error logs or console messages, please paste them here.
+      placeholder: Paste any error messages or console logs here...
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here.
+      placeholder: Any additional information that might help...
+
+  - type: checkboxes
+    id: recovery-impact
+    attributes:
+      label: Recovery Platform Impact
+      description: Does this bug affect recovery-specific features?
+      options:
+        - label: This affects job search for recovery-focused positions
+        - label: This affects recovery support resources
+        - label: This affects employer tools for recovery-friendly hiring
+        - label: This affects user privacy/sensitive recovery information
+        - label: This does not affect recovery-specific features
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this bug hasn't been reported already
+          required: true
+        - label: I have provided all the required information
+          required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/vscoder427/warp-employa/blob/main/README.md
+    about: Check the project documentation
+  - name: Email Support
+    url: mailto:dev@employa.work
+    about: Contact us directly for urgent issues

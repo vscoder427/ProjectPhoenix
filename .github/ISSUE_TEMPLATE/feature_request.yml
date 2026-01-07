@@ -1,0 +1,186 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Employa
+title: "[FEATURE] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please fill out this form to help us understand your request.
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of what you want to happen.
+      placeholder: Describe the feature you'd like to see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? What is the user need?
+      placeholder: Is your feature request related to a problem? Please describe.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like in detail.
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative-solutions
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or features you've considered.
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: What area of the platform does this feature relate to?
+      options:
+        - Frontend/UI
+        - Backend/API
+        - Database
+        - Authentication
+        - Infrastructure
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: Target User Type
+      description: Who would benefit most from this feature?
+      multiple: true
+      options:
+        - Job Seekers in Recovery
+        - Employers/Hiring Managers
+        - Recovery Support Staff
+        - Platform Administrators
+        - API Consumers
+        - All Users
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature?
+      options:
+        - Low (nice to have, not urgent)
+        - Medium (would be helpful, moderate impact)
+        - High (important for user experience)
+        - Critical (essential for platform success)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: recovery-focus
+    attributes:
+      label: Recovery Platform Alignment
+      description: How does this feature align with the recovery mission?
+      options:
+        - label: Directly supports individuals in recovery finding employment
+        - label: Helps employers create recovery-friendly workplaces
+        - label: Provides recovery support resources/community building
+        - label: Improves accessibility for users with recovery-related challenges
+        - label: Enhances privacy/security for sensitive recovery information
+        - label: General platform improvement (not recovery-specific)
+
+  - type: textarea
+    id: user-stories
+    attributes:
+      label: User Stories
+      description: Describe the feature from different user perspectives.
+      placeholder: |
+        As a [user type], I want [goal] so that [benefit].
+
+        Example:
+        As a job seeker in recovery, I want to save job searches so that I can quickly revisit relevant opportunities.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What conditions must be met for this feature to be considered complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+
+  - type: textarea
+    id: mockups-wireframes
+    attributes:
+      label: Mockups/Wireframes
+      description: If you have any visual ideas or mockups, please share them here.
+      placeholder: Drag and drop images or describe the UI/UX vision...
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: Technical Considerations
+      description: Any technical requirements or constraints to consider?
+      placeholder: |
+        - Integration requirements
+        - Performance considerations
+        - Security implications
+        - Data storage needs
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (few hours of work)
+        - Medium (few days of work)
+        - Complex (few weeks of work)
+        - Major (months of work)
+        - Unknown
+
+  - type: textarea
+    id: success-metrics
+    attributes:
+      label: Success Metrics
+      description: How would we measure the success of this feature?
+      placeholder: |
+        - Metric 1: Increased user engagement
+        - Metric 2: Reduced support tickets
+        - Metric 3: Improved conversion rates
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, research, or examples about the feature request here.
+      placeholder: Any additional information that might help...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this feature hasn't been requested already
+          required: true
+        - label: I have provided sufficient detail for the development team to understand the request
+          required: true
+        - label: This feature aligns with Employa's mission of supporting recovery and employment
+          required: true
