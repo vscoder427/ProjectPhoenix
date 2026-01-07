@@ -9,6 +9,7 @@ This standard defines container and Cloud Run defaults for services.
 ## Concurrency
 
 - Per-service tuning based on load tests
+- Record the tuned values, warm instances, and CPU budgets in the service spec and release readiness notes.
 
 ## Min Instances
 
