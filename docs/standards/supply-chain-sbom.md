@@ -6,6 +6,7 @@ This standard defines software supply chain security requirements.
 
 - Generate SBOM for every build (CycloneDX)
 - Store SBOM artifacts with release metadata
+- Link SBOM artifact to the release readiness checklist so reviewers can verify and sign off before cutover.
 
 ## Provenance
 
