@@ -1,0 +1,21 @@
+steps:
+  - name: python:3.12-slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install ruff==0.0.284 pyright==1.1.378 pytest schemathesis hypothesis bandit semgrep
+        ruff check api tests
+        pyright
+        pytest
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/golden-service-python:$SHORT_SHA
+      - .
+images:
+  - gcr.io/$PROJECT_ID/golden-service-python:$SHORT_SHA
