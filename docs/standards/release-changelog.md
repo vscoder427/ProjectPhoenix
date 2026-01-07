@@ -18,3 +18,4 @@ This standard defines how releases and changelogs are managed.
 ## Release Approval
 
 - Manual approval with signoff checklist for production
+- Signoff must include completion of the [Release Readiness Checklist](release-readiness.md) and release notes linking to the changelog entry.
