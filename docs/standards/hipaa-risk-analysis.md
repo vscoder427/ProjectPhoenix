@@ -20,3 +20,4 @@ This standard defines the required HIPAA risk analysis process and artifacts.
 - Identify threats and vulnerabilities
 - Rate likelihood and impact
 - Define mitigation actions and timelines
+- Log risk analysis artifacts in the enterprise risk register and tie mitigations back to the HIPAA Compliance and Privacy standards.
