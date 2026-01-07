@@ -20,3 +20,4 @@ This standard defines background job processing and scheduling.
 ## Idempotency
 
 - Required for all background tasks
+- Document job expectations (throughput, failure budgets) in the runbook and release readiness checklist so automation triggers can be validated during deployment.
