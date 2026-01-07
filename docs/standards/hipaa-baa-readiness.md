@@ -7,6 +7,7 @@ Use this checklist to prepare for HIPAA compliance and verify vendor readiness.
 - [ ] List all vendors that store or process PHI
 - [ ] Confirm which services transmit PHI
 - [ ] Identify data flows involving PHI
+- Reference the [Vendor Management Standard](vendor-management.md) for inventory, renewal tracking, and offboarding controls.
 
 ## Required BAAs
 
