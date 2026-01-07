@@ -17,3 +17,4 @@ This standard defines OpenTelemetry configuration and telemetry schemas.
 ## Sampling
 
 - Adaptive sampling with per-endpoint overrides
+- Document telemetry schema or sampling changes in the release readiness checklist so dashboards can be updated in lockstep.
