@@ -30,3 +30,4 @@ This standard defines how standards are created, updated, and enforced.
 - Required reviewers for standards changes
 - Required checks: lint, type check, tests, security scans, SBOM, contract tests
 - Production deploys require manual approval
+- Tier-based enforcement uses the Service Tiering standard
