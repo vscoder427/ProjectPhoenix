@@ -1,67 +1,75 @@
 # Standards Index
 
-Core standards are required for every service unless the Service Tiering standard allows otherwise. Guidelines are recommended and apply when relevant.
+Organized navigation for the standards library. Files are grouped by discipline so you can find architecture, security, compliance, operations, testing, and governance references quickly.
 
-## Core Standards
+## Architecture & API
 
 - [Enterprise Architecture Principles](../enterprise-architecture-principles.md)
 - [Service Tiering and Required Standards](service-tiering.md)
 - [API Conventions](api-conventions.md)
-- [Security and Secrets](security-secrets.md)
-- [Privacy (GDPR/CCPA)](privacy-gdpr-ccpa.md)
-- [Data Classification and Retention](data-classification-retention.md)
-- [Auth and JWT](auth-jwt.md)
-- [DB Isolation and Migration Contracts](db-isolation-migrations.md)
-- [Logging and Observability](logging-observability.md)
-- [Runbooks and Incident Response](runbooks-incident-response.md)
-- [CI/CD and Deployment](ci-cd-deployment.md)
-- [CI/CD Gating Policy](ci-cd-gating-policy.md)
-- [Release Readiness Checklist](release-readiness.md)
-- [Standards Governance and Enforcement](standards-governance.md)
-
-## Guidelines and Reference Standards
-
-- [HIPAA Compliance](hipaa-compliance.md)
-- [HIPAA BAA Readiness](hipaa-baa-readiness.md)
-- [HIPAA Risk Analysis](hipaa-risk-analysis.md)
-- [Threat Modeling](threat-modeling.md)
-- [Security Review Checklist](security-review-checklist.md)
-- [SLO and Alerting Templates](slo-alert-templates.md)
-- [Runbook Templates](runbook-templates.md)
-- [Supply Chain and SBOM](supply-chain-sbom.md)
-- [Build Provenance](build-provenance.md)
 - [Service Template and Repo Layout](service-template.md)
 - [Service Spec Template](service-spec-template.md)
-- [Release and Changelog](release-changelog.md)
-- [Testing Toolchain](testing-toolchain.md)
-- [Testing and TDD](testing-tdd.md)
-- [Formatting, Linting, and Typing](formatting-linting-typing.md)
-- [Coding Conventions](coding-conventions.md)
+- [API Lifecycle Governance](api-lifecycle-governance.md)
 - [Dependency Management](dependency-management.md)
-- [Runtime and Versioning](tech-runtime-versions.md)
-- [Container and Cloud Run](container-cloudrun.md)
-- [API Gateway and Networking](api-gateway-networking.md)
-- [Service-to-Service Communication](service-communication.md)
-- [mTLS and PKI](mtls-pki.md)
 - [Rate Limiting and Quota](rate-limit-quota.md)
 - [OpenAPI and Documentation](openapi-documentation.md)
 - [Error Codes Registry](error-codes-registry.md)
 - [Config and Secrets Implementation](config-secrets-implementation.md)
 - [Config Change Management](config-change-management.md)
-- [Logging Redaction Rules](logging-redaction.md)
-- [Observability Implementation](observability-implementation.md)
-- [Data Encryption and KMS](data-encryption-kms.md)
-- [Data Classification Mapping](data-classification-mapping.md)
-- [Data Governance](data-governance.md)
-- [Business Continuity](business-continuity.md)
-- [Compliance Audit Readiness](compliance-audit-readiness.md)
-- [Vendor Management](vendor-management.md)
-- [Cost Management](cost-management.md)
-- [API Lifecycle Governance](api-lifecycle-governance.md)
-- [Team Scaling and Onboarding](team-scaling-onboarding.md)
-- [Operational Maturity](operational-maturity.md)
 - [Infrastructure as Code (Terraform)](iac-terraform.md)
-- [Background Jobs](background-jobs.md)
-- [Caching](caching.md)
+
+## Security Controls
+
+- [Security and Secrets](security/security-secrets.md)
+- [Auth and JWT](security/auth-jwt.md)
+- [Secrets Access Policy](security/secrets-access-policy.md)
+- [API Gateway and Networking](security/api-gateway-networking.md)
+- [Service-to-Service Communication](security/service-communication.md)
+- [mTLS and PKI](security/mtls-pki.md)
+- [Logging Redaction Rules](security/logging-redaction.md)
+
+## Compliance & Privacy
+
+- [HIPAA Compliance](compliance/hipaa-compliance.md)
+- [HIPAA BAA Readiness](compliance/hipaa-baa-readiness.md)
+- [HIPAA Risk Analysis](compliance/hipaa-risk-analysis.md)
+- [Privacy (GDPR/CCPA)](compliance/privacy-gdpr-ccpa.md)
+- [Compliance Audit Readiness](compliance/compliance-audit-readiness.md)
+- [Security Review Checklist](compliance/security-review-checklist.md)
+- [Threat Modeling](compliance/threat-modeling.md)
+- [Data Classification and Retention](compliance/data-classification-retention.md)
+- [Data Classification Mapping](compliance/data-classification-mapping.md)
+- [Data Encryption and KMS](compliance/data-encryption-kms.md)
+- [Data Governance](compliance/data-governance.md)
+- [Vendor Management](compliance/vendor-management.md)
+- [Supply Chain and SBOM](compliance/supply-chain-sbom.md)
+- [Build Provenance](compliance/build-provenance.md)
+- [Business Continuity](compliance/business-continuity.md)
+
+## Operational Excellence
+
+- [Release Readiness Checklist](operations/release-readiness.md)
+- [Release Readiness Tracking](operations/release-readiness-tracking.md)
+- [Release and Changelog](operations/release-changelog.md)
+- [Runbook Templates](operations/runbook-templates.md)
+- [Runbooks, Incident Response](operations/runbooks-incident-response.md)
+- [Logging and Observability](operations/logging-observability.md)
+- [Observability Implementation](operations/observability-implementation.md)
+- [SLO and Alerting Templates](operations/slo-alert-templates.md)
+- [Cost Management](operations/cost-management.md)
+- [Caching](operations/caching.md)
+- [Background Jobs](operations/background-jobs.md)
+
+## Testing & Quality
+
+- [Testing Toolchain](testing-toolchain.md)
+- [Testing and TDD](testing-tdd.md)
+- [Formatting, Linting, and Typing](formatting-linting-typing.md)
+- [Coding Conventions](coding-conventions.md)
+- [Service Scaffolding Checklist](templates/service-scaffold-checklist.md)
+
+## Governance
+
+- [Standards Governance and Enforcement](standards-governance.md)
+- [Release Readiness Checklist](operations/release-readiness.md)
 - [ADR Standard](adr-standard.md)
-- [Secrets Access Policy](secrets-access-policy.md)
