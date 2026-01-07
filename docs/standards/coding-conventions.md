@@ -50,3 +50,5 @@ This standard defines coding conventions for all Employa services.
 
 - Endpoints live under `/api/v1/`
 - New versions require new route modules
+
+> Any non-Python implementation must document its own coding conventions and link to this template or a decision record explaining the deviation.
