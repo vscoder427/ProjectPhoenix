@@ -1,3 +1,4 @@
 # Templates Index
 
-This folder will contain canonical templates (Dockerfile, Cloud Build, CI, Makefile, etc.).
+- [Golden Service Reference](golden-service-reference.md)
+- [Service Scaffold Checklist](service-scaffold-checklist.md)
