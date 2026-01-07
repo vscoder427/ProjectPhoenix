@@ -21,3 +21,4 @@ This standard defines how threat models are created and reviewed.
 ## Review
 
 - Security review required before implementation
+- Archive review artifacts in the enterprise risk register and reference the [Security Review Checklist](security-review-checklist.md) when closing mitigation actions.
