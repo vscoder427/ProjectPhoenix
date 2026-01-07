@@ -13,3 +13,4 @@ This standard defines how dependencies are managed and updated across services.
 ## Update Cadence
 
 - Weekly automated dependency updates with review
+- Include license review and risk notes in the SBOM/supply-chain review (see [Supply Chain and SBOM](supply-chain-sbom.md)).
