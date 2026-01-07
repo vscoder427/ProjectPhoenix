@@ -53,3 +53,5 @@ service/
 - `docs/spec.md`: behavior spec and API contract
 - `docs/runbook.md`: deploy/rollback/alerts
 - `docs/adr/`: architecture decisions
+- `docs/decisions.md` or similar: link to [Decision Record (Lite)](../templates/decision-record-lite.md) for small tradeoffs
+- Use the [Service Ownership Checklist](../templates/service-ownership-checklist.md) to keep owner/backup/health info in the README
