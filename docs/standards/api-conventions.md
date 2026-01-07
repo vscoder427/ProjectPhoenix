@@ -1,0 +1,82 @@
+# API Conventions
+
+This standard defines the required API contract for all Employa microservices.
+
+## Versioning
+
+- All public endpoints use URL versioning: `/api/v1/...`
+- Breaking changes require `/api/v2` and a deprecation notice for `/api/v1`
+- Maintain a compatibility matrix for active versions
+
+## Paths and Methods
+
+- Use RESTful nouns, not verbs
+- Use plural resource names: `/users`, `/meetings`, `/jobs`
+- Use standard HTTP methods:
+  - `GET` list or retrieve
+  - `POST` create
+  - `PUT` replace
+  - `PATCH` partial update
+  - `DELETE` remove
+
+## Content Types
+
+- Request and response `Content-Type` is `application/json`
+- Reject non-JSON with `415 Unsupported Media Type`
+
+## Request IDs
+
+- Accept `X-Request-Id` from callers
+- Generate one if absent
+- Include `X-Request-Id` in all responses and logs
+
+## Authentication
+
+- Require auth on all endpoints unless explicitly public
+- Standard header: `Authorization: Bearer <token>`
+- Reject missing/invalid tokens with `401`
+
+## Error Schema
+
+All non-2xx responses must use this structure:
+
+```json
+{
+  "error": {
+    "code": "STRING_CODE",
+    "message": "Human readable message",
+    "details": {
+      "field": "Additional context"
+    }
+  }
+}
+```
+
+## Pagination
+
+- Use cursor or offset with a consistent response shape
+- Response must include:
+  - `items` (array)
+  - `next_cursor` or `page`/`page_size`/`total`
+
+## Filtering and Sorting
+
+- Use query params for filters: `?status=active&city=baltimore`
+- Use `sort` for ordering: `?sort=created_at:desc`
+
+## Idempotency
+
+- All write endpoints support idempotency
+- Accept `Idempotency-Key` header for `POST`/`PUT`/`PATCH`
+
+## Rate Limiting Headers
+
+- Responses should include:
+  - `X-RateLimit-Limit`
+  - `X-RateLimit-Remaining`
+  - `X-RateLimit-Reset`
+
+## Deprecation
+
+- Include `Deprecation` and `Sunset` headers for retiring endpoints
+- Provide migration guide link in response headers or docs
