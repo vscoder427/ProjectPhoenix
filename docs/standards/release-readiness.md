@@ -1,6 +1,6 @@
 # Release Readiness Checklist
 
-This standard defines a minimal release readiness checklist for production deploys.
+This standard defines a minimal release readiness checklist for production deploys and explains where supporting artifacts are tracked.
 
 ## Required Checks
 
@@ -10,6 +10,12 @@ This standard defines a minimal release readiness checklist for production deplo
 - SBOM generated and stored
 - Canary plan and rollback plan documented
 - Post-deploy verification steps documented
+
+## Artefact Tracking
+
+- Every release gate artifact (SAST/SCA results, SBOM, security review checklist, telemetry changes, config diffs, drift reports, secret access approvals) is referenced in the release readiness checklist and stored in `docs/releases/<service>/YYYY-MM-DD/` or an equivalent release folder.
+- Automate checklist generation via the `scripts/build-release-checklist.ps1` helper (create this script if it doesn't exist) that populates required entries and attaches it as a release asset before manual approval.
+- Post approval, publish release notes that link to the signed checklist, SBOM, and release folder described in the [Release Readiness Tracking](release-readiness-tracking.md) guide.
 
 ## Optional Checks (Tier 0 and 1 recommended)
 
