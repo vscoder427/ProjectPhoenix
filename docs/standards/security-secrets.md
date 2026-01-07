@@ -8,6 +8,8 @@ This standard defines security and secrets management for all Employa microservi
 - Local development uses `.env` with no PHI
 - Never commit secrets to the repo
 
+> **Guidance:** use the [Secrets Access Policy](secrets-access-policy.md) when approving human review access or rotation requests.
+
 ## Service Identity
 
 - Workload Identity is required
@@ -28,3 +30,5 @@ This standard defines security and secrets management for all Employa microservi
 
 - Automated secret rotation with audit trail
 - Rotation schedules documented per secret
+
+- Revoke service account keys and secrets immediately if SPIRE/Envoy reports identity anomalies; log in the incident tracker.
