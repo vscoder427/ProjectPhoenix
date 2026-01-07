@@ -21,12 +21,14 @@ This standard defines how data is classified, stored, retained, and deleted acro
 - PHI and PII retention must follow documented policy per service
 - Retention periods must be justified and documented
 - Legal hold supported for PHI/PII
+- Retention and deletion must satisfy GDPR/CCPA requirements (see Privacy standard)
 
 ## Deletion Policy
 
 - Deletion requests must be tracked and verified
 - Deletion must cover primary data, backups, and derived artifacts
 - Audit logs must record deletion events
+- DSAR and "right to delete" requests must be handled within required timelines
 
 ## Logging Restrictions
 

@@ -15,8 +15,11 @@ This standard defines ingress, routing, and network security for services.
 ## mTLS
 
 - mTLS required for all service-to-service traffic
+- All internal calls must traverse the Envoy sidecar (see mTLS and PKI standard)
 
 ## Network Policies
 
 - Services are private by default
 - Public endpoints exposed only via the gateway
+- Use VPC connector for internal service-to-service traffic
+- Block direct public ingress to services unless explicitly approved

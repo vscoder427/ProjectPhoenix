@@ -4,7 +4,8 @@ This standard defines database isolation, schema ownership, and migration contra
 
 ## DB Topology
 
-- Single Postgres instance with per-service schemas
+- Per-service database instance from day one (no shared schemas)
+- Shared instances are allowed only for legacy systems with an approved migration plan and end date
 
 ## Roles and Access
 
@@ -16,6 +17,13 @@ This standard defines database isolation, schema ownership, and migration contra
 
 - Each service owns its migrations
 - Migration contracts required for every change
+
+## Legacy Migration Path (if shared instances exist)
+
+- Create a dedicated database for the service before new feature work
+- Use logical replication or dual-write only as a time-boxed migration step
+- Cut over reads first, then writes, then decommission shared schema access
+- Document the cutover plan and rollback in the service runbook
 
 ## Migration Contract Requirements
 
