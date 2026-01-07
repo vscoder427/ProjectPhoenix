@@ -15,3 +15,4 @@ This standard defines cost visibility and control.
 ## Optimization
 
 - Quarterly cost optimization review
+- Document monthly budget reviews and anomalies in the [Service Ownership Checklist](../templates/service-ownership-checklist.md).
