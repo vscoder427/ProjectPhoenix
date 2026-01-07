@@ -1,0 +1,66 @@
+name: Guardrails
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify release-readiness workflow has a successful run
+        env:
+          GH_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, sys, urllib.request
+
+          repo = os.environ["GH_REPO"]
+          token = os.environ["GITHUB_TOKEN"]
+          url = f"https://api.github.com/repos/{repo}/actions/workflows/release-readiness.yml/runs?per_page=1"
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "guardrail-check",
+          }
+          request = urllib.request.Request(url, headers=headers)
+          try:
+              response = urllib.request.urlopen(request, timeout=10)
+          except urllib.error.HTTPError as err:
+              print(f"Failed to query workflow runs: {err}")
+              sys.exit(1)
+
+          payload = json.load(response)
+          runs = payload.get("workflow_runs", [])
+          if not runs:
+              print("No release-readiness workflow runs found.")
+              sys.exit(1)
+
+          last_run = runs[0]
+          conclusion = last_run.get("conclusion")
+          if conclusion != "success":
+              print("Latest release-readiness workflow run is not successful.")
+              print(json.dumps(last_run, indent=2))
+              sys.exit(1)
+
+          print(f"Latest release-readiness run succeeded: {last_run.get('html_url')}")
+          print(f"Triggering event: {last_run.get('event')}, updated at {last_run.get('updated_at')}")
+          sys.exit(0)
+          PY
+
+      - name: Validate service documentation for modified services
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          python scripts/check-service-docs.py
