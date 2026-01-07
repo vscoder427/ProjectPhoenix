@@ -33,12 +33,16 @@ This standard defines HIPAA requirements for systems that handle PHI. It applies
 - Collect and store only the minimum PHI needed
 - Mask or tokenize PHI where possible
 - Restrict PHI access by role and service
+-
+- **Cross-reference:** follow the [Privacy (GDPR/CCPA) standard](privacy-gdpr-ccpa.md) for shared DSAR workflows when PHI overlaps with GDPR/CCPA.
 
 ## Vendor and BAA Requirements
 
 - All vendors handling PHI must have a signed BAA
 - Maintain a vendor BAA inventory and renewal schedule
 - No PHI in systems without a BAA
+-
+> **Signal to agents:** Add risk analysis artifacts to the enterprise risk register and link to the privacy standard when PHI intersects with GDPR/CCPA jurisdictions.
 
 ## Monitoring and Auditing
 
