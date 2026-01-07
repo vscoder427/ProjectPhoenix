@@ -19,3 +19,4 @@ This standard defines caching patterns and policies.
 
 - TTL + explicit invalidation events
 - Versioned cache keys required
+- Document invalidation plans and TTL adjustments in the runbook and release readiness checklist, especially when deploying schema migrations or new downstream consumers.
