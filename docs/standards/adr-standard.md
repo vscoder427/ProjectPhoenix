@@ -25,3 +25,4 @@ This standard defines how architectural decisions are documented.
 
 - ADRs require review before acceptance
 - Superseded ADRs must link to the replacing record
+- Link short-lived trade-offs to the [Decision Record (Lite)](../templates/decision-record-lite.md) and note them in the release readiness checklist when they affect deployment decisions.
