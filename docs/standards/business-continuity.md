@@ -20,3 +20,4 @@ This standard defines disaster recovery and continuity requirements.
 ## Incident Escalation
 
 - Continuity plan linked in runbooks
+- Document continuity readiness for Tier 0 services in the release readiness checklist and tie it back to the service runbook.
