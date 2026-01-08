@@ -1,0 +1,37 @@
+# Semantic Release Configuration Template
+#
+# USAGE:
+# 1. Copy this file to: services/{service-name}/pyproject.toml
+# 2. No changes needed - works as-is for all services
+# 3. Ensure GITHUB_TOKEN is available in CI environment
+
+[tool.semantic_release]
+# Version file locations
+version_variables = ["api/app/__version__.py:__version__"]
+version_pattern = ["api/app/__version__.py:__version_tuple__ = \\({major}, {minor}, {patch}\\)"]
+
+# Branch and release settings
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+build_command = false
+
+# Commit parsing
+commit_parser = "angular"
+changelog_file = "CHANGELOG.md"
+
+# Commit type to version bump mapping
+[tool.semantic_release.commit_parser_options]
+major_tags = ["feat!"]                    # Breaking changes → MAJOR bump
+minor_tags = ["feat"]                      # New features → MINOR bump
+patch_tags = ["fix", "perf", "refactor", "docs", "style", "test", "chore"]  # Fixes → PATCH bump
+
+# Changelog configuration
+[tool.semantic_release.changelog]
+template_dir = "../../scripts/release-templates"
+exclude_commit_patterns = []
+
+# GitHub integration
+[tool.semantic_release.remote]
+type = "github"
+token = { env = "GITHUB_TOKEN" }

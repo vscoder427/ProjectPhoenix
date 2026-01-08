@@ -1,0 +1,199 @@
+name: Vertex AI Migration Reminders
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC (check milestones)
+    - cron: '0 9 * * 1'
+    # Run on 1st of every month (check BAA renewal)
+    - cron: '0 9 1 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  milestone-reminder:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check milestone deadlines
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const now = new Date();
+            const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            // Get all open milestones
+            const { data: milestones } = await github.rest.issues.listMilestones({
+              owner,
+              repo,
+              state: 'open'
+            });
+
+            for (const milestone of milestones) {
+              if (!milestone.due_on) continue;
+
+              const dueDate = new Date(milestone.due_on);
+              const daysUntilDue = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+
+              // If milestone due within 7 days, comment on all open issues in that milestone
+              if (daysUntilDue <= 7 && daysUntilDue >= 0) {
+                const { data: issues } = await github.rest.issues.listForRepo({
+                  owner,
+                  repo,
+                  milestone: milestone.number,
+                  state: 'open'
+                });
+
+                for (const issue of issues) {
+                  const comment = `
+## 🔔 Milestone Deadline Approaching
+
+**Milestone:** ${milestone.title}
+**Due:** ${milestone.due_on.split('T')[0]} (${daysUntilDue} day${daysUntilDue !== 1 ? 's' : ''} remaining)
+**Open Issues:** ${milestone.open_issues}
+
+Please review the checklist in this issue and update your progress.
+
+---
+*This is an automated reminder from the Vertex AI Migration workflow.*
+                  `;
+
+                  // Check if we already commented this week
+                  const { data: existingComments } = await github.rest.issues.listComments({
+                    owner,
+                    repo,
+                    issue_number: issue.number,
+                    since: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString()
+                  });
+
+                  const alreadyCommented = existingComments.some(c =>
+                    c.body.includes('Milestone Deadline Approaching') && c.user.login === 'github-actions[bot]'
+                  );
+
+                  if (!alreadyCommented) {
+                    await github.rest.issues.createComment({
+                      owner,
+                      repo,
+                      issue_number: issue.number,
+                      body: comment
+                    });
+                  }
+                }
+              }
+            }
+
+  baa-renewal-reminder:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check BAA renewal date
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // This will trigger monthly on the 1st
+            // Check if we're within 90 days of any BAA renewal
+            // For now, just comment on Issue #9 (BAA Procurement) monthly
+
+            const { data: issue } = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: 9
+            });
+
+            if (issue.state === 'closed') {
+              // BAA was procured, check for renewal reminder
+              const now = new Date();
+              const monthName = now.toLocaleString('default', { month: 'long' });
+
+              const comment = `
+## 📅 Monthly HIPAA Compliance Check
+
+**Month:** ${monthName} ${now.getFullYear()}
+
+### Action Items:
+- [ ] Verify Google Cloud BAA is still active
+- [ ] Check BAA expiration date (should be in compliance docs)
+- [ ] If expiring within 90 days, initiate renewal process
+- [ ] Review any changes to PHI data flows
+- [ ] Confirm all services still covered by BAA
+
+### BAA Location:
+\`ProjectPhoenix\\docs\\compliance\\baas\\google-cloud-baa.pdf\`
+
+### Next Actions:
+If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compliance"
+
+---
+*This is an automated monthly reminder from the Vertex AI Migration workflow.*
+              `;
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: 9,
+                body: comment
+              });
+            }
+
+  compliance-quarterly-review:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    if: github.event.schedule == '0 9 1 * *' && (github.event_name == 'schedule' && (startsWith(github.run_number, '1') || startsWith(github.run_number, '4') || startsWith(github.run_number, '7') || startsWith(github.run_number, '10')))
+    steps:
+      - name: Quarterly compliance review reminder
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const now = new Date();
+            const quarter = Math.ceil((now.getMonth() + 1) / 3);
+
+            const comment = `
+## 📋 Quarterly HIPAA Compliance Review
+
+**Quarter:** Q${quarter} ${now.getFullYear()}
+
+### Review Checklist:
+- [ ] Review access controls for Dave service
+  - [ ] Verify service account permissions (should be ONLY aiplatform.user + logging.logWriter)
+  - [ ] Review who has access to Dave Cloud Run service
+  - [ ] Check for any unauthorized access in audit logs
+- [ ] Audit log review
+  - [ ] Review PHI access patterns in BigQuery
+  - [ ] Check for anomalies in Vertex AI API usage
+  - [ ] Verify audit log retention policy still in effect
+- [ ] Documentation updates
+  - [ ] Update HIPAA compliance report if anything changed
+  - [ ] Review and update PHI data flow diagram
+  - [ ] Verify all BAAs still active and current
+- [ ] Security review
+  - [ ] Check for any exposed secrets (should be none)
+  - [ ] Review Cloud Run service configuration
+  - [ ] Verify encryption in transit and at rest
+
+### Compliance Report Location:
+\`ProjectPhoenix\\docs\\compliance\\dave-hipaa-compliance-report.md\`
+
+### Next Steps:
+After completing review, comment on this issue with findings and any corrective actions taken.
+
+---
+*This is an automated quarterly reminder from the Vertex AI Migration workflow.*
+            `;
+
+            // Create a new issue for the quarterly review
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title: `Q${quarter} ${now.getFullYear()} HIPAA Compliance Review`,
+              body: comment,
+              labels: ['hipaa-compliance', 'critical']
+            });

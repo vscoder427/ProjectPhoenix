@@ -15,6 +15,7 @@ from .config import get_settings, Settings
 from .logging import configure_logging, request_logger
 # Import the aggregated router from the routes package
 from .routes import router as api_router
+from .middleware.deprecation import DeprecationMiddleware
 from . import __version__
 
 settings = get_settings()
@@ -66,6 +67,9 @@ async def metadata(settings: Settings = Depends(get_settings)) -> JSONResponse:
 
 # Include the aggregated router
 app.include_router(api_router)
+
+# Add deprecation middleware
+app.add_middleware(DeprecationMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

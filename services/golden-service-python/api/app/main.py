@@ -8,6 +8,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .config import get_settings, Settings
 from .logging import configure_logging, request_logger
 from .routes import router
+from .middleware.deprecation import DeprecationMiddleware
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from . import __version__
 
@@ -47,6 +48,9 @@ async def metadata(settings: Settings = Depends(get_settings)) -> JSONResponse:
     )
 
 app.include_router(router)
+
+# Add deprecation middleware
+app.add_middleware(DeprecationMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
