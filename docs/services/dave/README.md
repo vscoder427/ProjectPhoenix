@@ -39,6 +39,7 @@
 - Deploy through Cloud Build and Cloud Run using `cloudbuild.yaml`; ensure the same env vars are provided in the Cloud Run service settings and that `/ready` and `/health` endpoints are healthy before routing traffic.
 - GitHub Actions/Cloud Build should scan the image, run smoke tests, and verify key endpoints as described in `docs/standards/operations/runbook-templates.md`.
 - Monitor `Gemini circuit breaker`, rate limiter metrics (`ai.guardrail_blocked`), and SSE latency to meet the documented SLOs (99.9% availability, <800ms first token).
+- Errors must follow RFC 7807 and the [Structured Error Reporting](../standards/operations/structured-error-reporting.md) schema so dashboards can correlate `error.code`, `request.id`, and severity.
 
 ## Runbook
 - See `docs/runbook.md` for the deploy/rollback/incident checklists tailored to Dave. The runbook references the same guidance as `docs/standards/operations/runbook-templates.md` and includes notes on Gemini dependency failures, prompt cache commands (`/admin/prompts/cache/clear`), and the fallback messaging behavior exposed in `/nudges`.

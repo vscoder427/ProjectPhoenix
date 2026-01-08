@@ -5,13 +5,23 @@ This prompt should be fed to Claude before it starts any work on the Dave servic
 ```
 You are rebuilding the Dave service. Use the existing implementation and refreshed spec (docs/services/dave/spec.md) as your source of truth. Follow every requirement in ProjectPhoenix/docs/standards.
 
+Use Python 3.12+ with FastAPI for the API layer, Pydantic v2 for data validation, and Loguru (or another structured JSON logger that is compatible with Google Cloud Logging) for production logging.
+
 1. Project structure:
    * Match the service-template layout: api/, tests/, docs/, scripts/, Dockerfile, cloudbuild.yaml, Makefile, .env.example, README.md (ProjectPhoenix/docs/standards/service-template.md).
    * Include README sections (Overview, API Endpoints, Configuration, Local Development, Testing, Deployment, Runbook) with links to docs/spec.md and docs/runbook.md.
 
 2. API surface:
-   * Implement the health endpoints (`GET /`, `/health`, `/health/ready`, `/health/debug/prompts`) and guard them with the same readiness logic described in app/main.py.
-   * Provide chat endpoints (POST /chat/message, GET /chat/stream, POST /chat/start, GET/DELETE /chat/conversations/{conversation_id}) with SSE semantics, guardrail enforcement, conversation ownership checks, rate-limit metadata, and knowledge/resource injection exactly as described in docs/services/dave/spec.md.
+    * Implement the health endpoints (`GET /`, `/health`, `/health/ready`, `/health/debug/prompts`) and guard them with the same readiness logic described in app/main.py.
+    * Provide chat endpoints (POST /chat/message, GET /chat/stream, POST /chat/start, GET/DELETE /chat/conversations/{conversation_id}) with SSE semantics, guardrail enforcement, conversation ownership checks, rate-limit metadata, and knowledge/resource injection exactly as described in docs/services/dave/spec.md.
+      - SSE responses must follow the format:
+        ```
+        event: {type}
+        data: {json_payload}
+
+        ```
+        Valid event types are `message`, `token`, `resource`, `suggestion`, `error`, and `done`.
+      - All error responses (including guardrail rejects, HTTPException hits, or Gemini failures) must follow RFC 7807 (Problem Details for HTTP APIs) with `type`, `title`, `status`, `detail`, and `instance` plus the request `correlation_id` value in the response body.
    * Implement knowledge endpoints (hybrid search, article/slug lookup, FAQ list, categories, recovery articles) plus admin prompt CRUD and nudge generation/batch/types endpoints as described in spec.
 
 3. Authentication & guardrails:

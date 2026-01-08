@@ -24,6 +24,7 @@ This runbook mirrors the checklists in `ProjectPhoenix/docs/standards/operations
 ## Monitoring & Troubleshooting Notes
 - **Gemini dependency:** circuit breaker lives in `app/clients/gemini.py`. When open, the service returns HTTP errors with `circuit breaker open`; wait 60s for reset or restart the service if Gemini is down for longer periods.
 - **Rate limiter/guardrails:** check `ai.guardrail_blocked` metrics and logs from `app/guardrails`. Redis disconnects fall back to per-instance in-memory limits, so expect variability in token budgets but no shared state.
+- **Structured errors:** Verify every incident log/error uses the RFC 7807 + [Structured Error Reporting](../standards/operations/structured-error-reporting.md) schema (`error.code`, `service.name`, `request.id`, `severity`) so alerts map cleanly to dashboards.
 - **Prompt cache:** after prompt edits, call `POST /admin/prompts/cache/clear` (optionally filtered by category/name) to avoid stale instructions, then hit `/health/debug/prompts` to confirm the assembled system prompt.
 - **Nudge errors:** `/nudges/generate` returns fallback messages (see `NudgeService._get_fallback_response`) if Gemini fails so downstream workflows can still notify users.
 

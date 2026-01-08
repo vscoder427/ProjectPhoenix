@@ -98,6 +98,7 @@
 - **Metrics:** `prometheus-fastapi-instrumentator` (if installed) exposes `/metrics`, instruments request latency, status codes, and in-flight requests (`dave_http_requests_inprogress`), and adds `dave_app_info` with version/env.
 - **Health/readiness:** `/health/ready` runs Supabase/Solana (Gemini) checks; response includes per-dependency status and `503` when unhealthy.
 - **SLO:** aim for 99.9% availability and <800ms time-to-first-token (p95); adversarial guardrail hits (prompt injection/redirect) are logged via `ai.guardrail_blocked`.
+- **Structured errors:** All non-2xx responses follow RFC 7807 problem details and emit the schema from `docs/standards/operations/structured-error-reporting.md` (service name/tier, `request.id`, `error.code`, severity, etc.), making errors traceable in Google Cloud Logging and dashboards.
 
 ## 9) Testing
 - **Pytest suite:** `api/tests` contains `test_auth.py`, `test_chat.py`, `test_guardrails.py`, and `test_health.py` covering authentication paths, SSE + non-streaming responses, guardrail detection messages, and dependency health.
