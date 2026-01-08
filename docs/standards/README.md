@@ -59,6 +59,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 - [Cost Management](operations/cost-management.md)
 - [Caching](operations/caching.md)
 - [Background Jobs](operations/background-jobs.md)
+- [Structured Error Reporting](operations/structured-error-reporting.md)
 
 ## Testing & Quality
 
