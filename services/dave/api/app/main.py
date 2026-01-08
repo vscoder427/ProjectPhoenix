@@ -15,6 +15,7 @@ from .config import get_settings, Settings
 from .logging import configure_logging, request_logger
 # Import the aggregated router from the routes package
 from .routes import router as api_router
+from . import __version__
 
 settings = get_settings()
 configure_logging(settings)
@@ -34,7 +35,7 @@ if settings.otlp_endpoint:
 
 app = FastAPI(
     title=settings.service_name,
-    version="0.1.0",
+    version=__version__,
     description="Dave: Unified AI Gateway",
 )
 

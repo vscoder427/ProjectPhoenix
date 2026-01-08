@@ -9,6 +9,7 @@ from .config import get_settings, Settings
 from .logging import configure_logging, request_logger
 from .routes import router
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from . import __version__
 
 settings = get_settings()
 configure_logging(settings)
@@ -16,7 +17,7 @@ logger = logging.getLogger("golden-service")
 
 app = FastAPI(
     title=settings.service_name,
-    version="0.1.0",
+    version=__version__,
     description="Golden Service base for Employa microservices",
 )
 
