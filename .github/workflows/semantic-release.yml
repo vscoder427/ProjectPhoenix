@@ -1,0 +1,140 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'services/dave/**'
+      - 'services/golden-service-python/**'
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to release (dave, golden-service-python, or all)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - dave
+          - golden-service-python
+          - all
+      dry_run:
+        description: 'Dry run (no actual release)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      dave_changed: ${{ steps.changes.outputs.dave }}
+      golden_changed: ${{ steps.changes.outputs.golden }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            dave:
+              - 'services/dave/**'
+            golden:
+              - 'services/golden-service-python/**'
+
+  release-dave:
+    needs: detect-changes
+    if: |
+      (needs.detect-changes.outputs.dave_changed == 'true' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && (inputs.service == 'dave' || inputs.service == 'all'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        working-directory: services/dave
+        run: |
+          pip install python-semantic-release
+
+      - name: Run semantic-release (dry run)
+        if: inputs.dry_run
+        working-directory: services/dave
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          semantic-release version --no-commit --no-tag --no-push
+          semantic-release changelog
+
+      - name: Run semantic-release
+        if: ${{ !inputs.dry_run }}
+        working-directory: services/dave
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          semantic-release version
+          semantic-release publish
+
+      - name: Get new version
+        id: version
+        working-directory: services/dave
+        run: |
+          VERSION=$(python -c "import sys; sys.path.insert(0, 'api'); from app import __version__; print(__version__)")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Released Dave v$VERSION"
+
+  release-golden:
+    needs: detect-changes
+    if: |
+      (needs.detect-changes.outputs.golden_changed == 'true' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && (inputs.service == 'golden-service-python' || inputs.service == 'all'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        working-directory: services/golden-service-python
+        run: |
+          pip install python-semantic-release
+
+      - name: Run semantic-release
+        if: ${{ !inputs.dry_run }}
+        working-directory: services/golden-service-python
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          semantic-release version
+          semantic-release publish
+
+      - name: Get new version
+        id: version
+        working-directory: services/golden-service-python
+        run: |
+          VERSION=$(python -c "import sys; sys.path.insert(0, 'api'); from app import __version__; print(__version__)")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Released golden-service v$VERSION"

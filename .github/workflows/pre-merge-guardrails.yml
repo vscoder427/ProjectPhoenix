@@ -72,3 +72,35 @@ jobs:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
         run: |
           python scripts/check-service-docs.py
+
+      - name: Set up Python for version checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate version files exist
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          services = ["dave", "golden-service-python"]
+          missing = []
+
+          for service in services:
+              version_file = Path(f"services/{service}/api/app/__version__.py")
+              if not version_file.exists():
+                  missing.append(f"{service}: {version_file}")
+
+          if missing:
+              print("❌ Missing __version__.py files:")
+              for m in missing:
+                  print(f"  - {m}")
+              sys.exit(1)
+
+          print("✅ All services have __version__.py")
+          PY
+
+      - name: Check for sunset API versions
+        run: |
+          python scripts/check-sunset-versions.py
