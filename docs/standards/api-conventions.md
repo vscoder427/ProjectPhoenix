@@ -4,9 +4,28 @@ This standard defines the required API contract for all Employa microservices.
 
 ## Versioning
 
-- All public endpoints use URL versioning: `/api/v1/...`
-- Breaking changes require `/api/v2` and a deprecation notice for `/api/v1`
-- Maintain a compatibility matrix for active versions
+- **URL path versioning:** All endpoints under `/api/v1/`, `/api/v2/`, etc.
+- Breaking changes require new major API version (e.g., v1 → v2)
+- **30-day deprecation window:** Old versions deprecated for 30 days before sunset
+- Maintain compatibility matrix in `docs/api-versions.md`
+
+### Deprecation Headers (RFC 8594)
+
+When an API version is deprecated, include these headers:
+
+```
+Deprecation: true
+Sunset: Wed, 07 Feb 2026 00:00:00 GMT
+Link: <https://docs.employa.work/migration>; rel="deprecation"
+X-API-Deprecation-Days-Remaining: 15
+```
+
+### Migration Guides
+
+- Required for all breaking changes
+- Document what changed and how to migrate
+- Include code examples for common use cases
+- Publish before deprecation announcement
 
 ## Paths and Methods
 

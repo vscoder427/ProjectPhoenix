@@ -1,0 +1,48 @@
+#!/bin/bash
+# Preview what version bump will occur based on staged commits
+
+# Get service directory from current branch
+CURRENT_DIR=$(git rev-parse --show-toplevel)
+STAGED_FILES=$(git diff --cached --name-only)
+
+# Detect which service is being modified
+SERVICE=""
+if echo "$STAGED_FILES" | grep -q "services/dave/"; then
+    SERVICE="dave"
+elif echo "$STAGED_FILES" | grep -q "services/golden-service-python/"; then
+    SERVICE="golden-service-python"
+fi
+
+if [ -n "$SERVICE" ]; then
+    echo "🔍 Service modified: $SERVICE"
+
+    # Get current version
+    CURRENT_VERSION=$(cd "services/$SERVICE" && python -c "import sys; sys.path.insert(0, 'api'); from app import __version__; print(__version__)" 2>/dev/null || echo "unknown")
+    echo "📦 Current version: $CURRENT_VERSION"
+
+    # Get staged commit message
+    COMMIT_MSG_FILE=".git/COMMIT_EDITMSG"
+    if [ -f "$COMMIT_MSG_FILE" ]; then
+        COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+    else
+        COMMIT_MSG=$(git log -1 --pretty=%B 2>/dev/null || echo "")
+    fi
+
+    # Predict version bump
+    if echo "$COMMIT_MSG" | grep -qE "^(feat|fix)!:|BREAKING CHANGE:"; then
+        NEW_VERSION=$(echo "$CURRENT_VERSION" | awk -F. '{print ($1+1)".0.0"}')
+        echo "🚀 Next version (MAJOR): $NEW_VERSION"
+    elif echo "$COMMIT_MSG" | grep -qE "^feat:"; then
+        NEW_VERSION=$(echo "$CURRENT_VERSION" | awk -F. '{print $1"."($2+1)".0"}')
+        echo "🚀 Next version (MINOR): $NEW_VERSION"
+    elif echo "$COMMIT_MSG" | grep -qE "^(fix|perf|refactor):"; then
+        NEW_VERSION=$(echo "$CURRENT_VERSION" | awk -F. '{print $1"."$2"."($3+1)}')
+        echo "🚀 Next version (PATCH): $NEW_VERSION"
+    else
+        echo "ℹ️  No version bump (docs/style/test/chore)"
+    fi
+
+    echo ""
+fi
+
+exit 0
