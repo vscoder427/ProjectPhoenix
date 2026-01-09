@@ -324,17 +324,43 @@ alembic upgrade head
 "C:\Program Files\GitHub CLI\gh.exe" pr create --title "feat(dave): add career coaching endpoint" --body "..."
 ```
 
+## Service Development Workflow
+
+When fixing bugs or adding features to ProjectPhoenix microservices:
+
+**Quick Start:**
+1. Select issue from backlog: https://github.com/vscoder427/ProjectPhoenix/issues
+2. Create branch: `fix/issue-{number}-{description}` or `feat/issue-{number}-{description}`
+3. Implement with appropriate standards level (minimal/moderate/full)
+4. Write tests, run linting: `pytest --cov=app` and `ruff check app/`
+5. Update docs (spec.md, runbook.md, CHANGELOG.md as needed)
+6. Create PR with conventional commit title: `fix:`, `feat:`, `docs:`, `refactor:`
+7. Reference issue in PR: `Closes #X`
+
+**Standards Levels:**
+- **Minimal** (< 50 lines, 1 file): Basic tests, conventional commits, lint passes
+- **Moderate** (2-5 files, new endpoint): Comprehensive tests, update service docs
+- **Full** (architectural/breaking): 85% coverage, ADR, release readiness checklist
+
+**Full Guide:** [Service Development Workflow](docs/guides/service-development-workflow.md)
+
+**Quick Reference:** [Developer Quick Reference Checklist](docs/guides/dev-quick-reference.md)
+
+**Issue Template:** [Service Bug or Feature Template](.github/ISSUE_TEMPLATE/service-issue.md)
+
 ## Next Steps for Claude Code
 
 When working on ProjectPhoenix:
 
-1. **Understand the phase:** Is this Dave (Phase 1), core services (Phase 2), or supporting services (Phase 3)?
-2. **Reference Golden Service:** Always check `/services/golden-service-python/` for patterns
-3. **Follow standards:** Consult `/docs/standards/` for architecture, security, testing guidelines
-4. **Use appropriate skills:** Reference the "When to Use Which" section above
-5. **Enforce governance gates:** Code quality, documentation, compliance, observability, cleanup
-6. **Maintain HIPAA compliance:** PHI encryption, audit logging, RLS policies
-7. **Write recovery-focused code:** Follow trauma-informed principles (see `documentation-engineer` skill)
+1. **Read the workflow first:** Check [Service Development Workflow](docs/guides/service-development-workflow.md) for GitHub issue fixes
+2. **Understand the phase:** Is this Dave (Phase 1), core services (Phase 2), or supporting services (Phase 3)?
+3. **Reference Golden Service:** Always check `/services/golden-service-python/` for patterns
+4. **Follow standards:** Consult `/docs/standards/` for architecture, security, testing guidelines
+5. **Use appropriate skills:** Reference the "Workspace Skills" section above
+6. **Apply right standards level:** Minimal for simple fixes, moderate for features, full for architectural changes
+7. **Enforce governance gates:** Code quality, documentation, compliance, observability, cleanup
+8. **Maintain HIPAA compliance:** PHI encryption, audit logging, RLS policies
+9. **Write recovery-focused code:** Follow trauma-informed principles (see `documentation-engineer` skill)
 
 All 16 workspace skills are available automatically. Use them explicitly when needed:
 - "Use **backend-developer** skill to implement this FastAPI endpoint"
