@@ -2,6 +2,11 @@
 
 Organized navigation for the standards library. Files are grouped by discipline so you can find architecture, security, compliance, operations, testing, and governance references quickly.
 
+> **Looking for step-by-step workflows?** See [Guides](../guides/README.md) for practical how-to documentation:
+> - [Service Development Workflow](../guides/service-development-workflow.md) - Fix bugs, add features
+> - [Developer Quick Reference](../guides/dev-quick-reference.md) - Daily checklist
+> - [IaC GitHub Tracking](../guides/iac-github-tracking.md) - Infrastructure workflow
+
 ## Architecture & API
 
 - [Enterprise Architecture Principles](../enterprise-architecture-principles.md)
@@ -68,6 +73,10 @@ Organized navigation for the standards library. Files are grouped by discipline 
 - [Formatting, Linting, and Typing](formatting-linting-typing.md)
 - [Coding Conventions](coding-conventions.md)
 - [Service Scaffolding Checklist](templates/service-scaffold-checklist.md)
+
+## Development & Debugging
+
+- [Debugging and Bug Fixing Workflow](debugging-workflow.md)
 
 ## Governance
 
