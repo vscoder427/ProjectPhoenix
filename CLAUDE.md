@@ -173,14 +173,16 @@ Every service must pass **5 gates** before production:
 
 ### Testing & Quality
 **Primary Skills:**
-- **testing-engineer** - TDD, pytest, 85% coverage enforcement, integration tests
+- **testing-engineer** - Comprehensive testing strategies, pytest, behavior-driven testing, integration tests
 - **performance-engineer** - Load testing, API optimization, autoscaling
 
 **Use Cases:**
-- Writing pytest fixtures for FastAPI
-- Achieving 85%+ test coverage
-- Integration tests for Supabase
-- Load testing Dave service
+- Writing comprehensive tests for critical business logic
+- Creating pytest fixtures for FastAPI testing
+- Validating that test coverage reflects actual reliability (85% minimum is non-negotiable)
+- Integration tests for Supabase and external APIs
+- Load testing services before production deployment
+- Security testing (input validation, auth flows)
 - Optimizing slow endpoints
 
 ### Documentation

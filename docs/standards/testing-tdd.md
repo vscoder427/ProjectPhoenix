@@ -4,8 +4,13 @@ This standard defines testing requirements and TDD practices for all Employa mic
 
 ## TDD Policy
 
-- Strict TDD required for all changes
-- Tier 2 services may request a documented exception (see Standards Governance) if they cannot follow strict TDD, but they still must document reasons in the Decision Record (Lite).
+- **Test-first development strongly recommended** for all changes
+  - TDD produces better-designed, more testable code
+  - Creates tight feedback loop for rapid iteration
+  - Results in comprehensive tests by default
+- **All production code requires comprehensive tests** regardless of when tests are written
+- Test-after is acceptable if tests thoroughly verify behavior
+- Tier 2 services have flexibility in testing approach (see Standards Governance)
 
 ## Test Suite Requirements
 
@@ -15,10 +20,21 @@ This standard defines testing requirements and TDD practices for all Employa mic
 - Load tests
 - Security tests
 
-## Coverage Targets
+## Coverage Quality Standards
 
-- 85%+ coverage for critical modules
-- Coverage thresholds enforced in CI
+- **Write comprehensive tests for critical code:**
+  - Authentication and authorization flows
+  - Business logic with compliance requirements (HIPAA)
+  - Data validation preventing security issues
+  - Error handling for user-facing failures
+- **Write thorough tests for standard code:**
+  - API endpoints and service layer
+  - Database interactions and RLS policies
+- **Coverage validates test quality:**
+  - When tests are comprehensive, coverage naturally exceeds 85%
+  - Coverage below 85% indicates untested critical paths
+  - **Coverage gate (85%) enforced in CI as quality floor, not target**
+  - **85% is non-negotiable** - never request exceptions or ask if lower is acceptable
 
 ## CI Gates
 
