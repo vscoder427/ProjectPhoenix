@@ -31,6 +31,11 @@ This standard defines database isolation, schema ownership, and migration contra
 - Backward-compatibility plan (expand/contract)
 - API contract test updates
 - Rollback plan
+- **RLS policies** (see [database-rls-policies.md](database-rls-policies.md))
+  - RLS MUST be enabled in the same migration as CREATE TABLE
+  - All user-facing tables require RLS policies
+  - Service role bypass policy required for backend operations
+  - Automated RLS tests required (see [testing-rls-policies.md](testing-rls-policies.md))
 
 ## Access Patterns
 

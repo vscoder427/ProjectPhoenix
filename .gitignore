@@ -6,3 +6,11 @@ __pycache__/
 logs/
 docs/releases/
 .DS_Store
+
+# Test coverage artifacts
+.coverage
+coverage.xml
+.hypothesis/
+
+# Test backups
+tests_backup_*/

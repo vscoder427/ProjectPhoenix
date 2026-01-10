@@ -19,6 +19,10 @@ This standard defines testing requirements and TDD practices for all Employa mic
 - Contract tests
 - Load tests
 - Security tests
+- **RLS policy tests** (see [testing-rls-policies.md](testing-rls-policies.md))
+  - Required for all Tier 0 services with user-facing tables
+  - Tests user isolation, service role bypass, and admin policies
+  - Prevents data leakage and HIPAA violations
 
 ## Coverage Quality Standards
 
@@ -29,7 +33,8 @@ This standard defines testing requirements and TDD practices for all Employa mic
   - Error handling for user-facing failures
 - **Write thorough tests for standard code:**
   - API endpoints and service layer
-  - Database interactions and RLS policies
+  - Database interactions and query optimization
+  - RLS policies (see [testing-rls-policies.md](testing-rls-policies.md) for specific requirements)
 - **Coverage validates test quality:**
   - When tests are comprehensive, coverage naturally exceeds 85%
   - Coverage below 85% indicates untested critical paths
