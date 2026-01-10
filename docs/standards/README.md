@@ -77,6 +77,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 ## Development & Debugging
 
 - [Debugging and Bug Fixing Workflow](debugging-workflow.md)
+- [AI-Native Development Standards](ai-native-development-standards.md) - Decision frameworks for safe AI coding assistance, MCP server safety, verification checkpoints for high-risk operations
 
 ## Governance
 

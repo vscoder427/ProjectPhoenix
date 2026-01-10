@@ -101,12 +101,19 @@ ProjectPhoenix is transitioning from minimal standards (quick fixes) to full ent
    - **Moderate:** 2-5 files, new endpoint, architectural impact → Moderate standards
    - **Complex:** Multiple services, breaking change, new patterns → Full standards
 
-3. **Check Dependencies:**
+3. **Apply AI Development Guidelines:**
+   - Review [AI-Native Development Standards](../standards/ai-native-development-standards.md) to determine tier:
+     - **Green Tier:** AI autonomous (boilerplate code, test generation, documentation updates) → Proceed with standard verification
+     - **Yellow Tier:** AI + human review (database changes, security code, API integrations) → Additional verification checkpoints required before merge
+     - **Red Tier:** Human required (HIPAA compliance, production incidents, architecture decisions) → AI assists only, human leads
+   - Use MCP servers following safety guidelines (see [MCP Safety](../standards/ai-native-development-standards.md#mcp-server-safety-guidelines))
+
+4. **Check Dependencies:**
    - Look for "Blocked by: #X" in issue description
    - Check acceptance criteria - are they clear?
    - Verify you have local environment set up for the service
 
-4. **Assign Yourself:**
+5. **Assign Yourself:**
    - Add yourself as assignee on GitHub
    - Add comment: "Working on this"
 
