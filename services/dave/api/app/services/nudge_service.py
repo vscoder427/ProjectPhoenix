@@ -10,9 +10,9 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from app.clients.gemini import get_gemini_client
-from app.services.prompt_manager import get_prompt_manager
-from app.schemas.nudge import (
+from api.app.clients.gemini import get_gemini_client
+from api.app.services.prompt_manager import get_prompt_manager
+from api.app.schemas.nudge import (
     NudgeGenerateRequest,
     NudgeGenerateResponse,
     NudgeType,

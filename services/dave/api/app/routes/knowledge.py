@@ -10,9 +10,9 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.middleware.auth import AuthContext, optional_auth
-from app.repositories.knowledge import KnowledgeRepository
-from app.schemas.knowledge import (
+from api.app.middleware.auth import AuthContext, optional_auth
+from api.app.repositories.knowledge import KnowledgeRepository
+from api.app.schemas.knowledge import (
     SearchRequest,
     SearchResponse,
     KnowledgeResult,

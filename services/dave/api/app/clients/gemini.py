@@ -19,7 +19,9 @@ from tenacity import (
     before_sleep_log,
 )
 
-from app.config import settings
+from api.app.config import get_settings
+
+settings = get_settings()
 
 logger = logging.getLogger(__name__)
 

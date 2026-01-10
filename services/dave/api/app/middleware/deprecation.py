@@ -14,7 +14,7 @@ from datetime import datetime
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.routes.versions import get_deprecation_status, is_sunset
+from api.app.routes.versions import get_deprecation_status, is_sunset
 
 logger = logging.getLogger(__name__)
 

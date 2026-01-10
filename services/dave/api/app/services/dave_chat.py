@@ -9,12 +9,12 @@ import time
 from typing import AsyncGenerator, Optional
 from dataclasses import dataclass
 
-from app.clients.gemini import GeminiClient, get_gemini_client
-from app.services.prompt_manager import PromptManagerService, get_prompt_manager
-from app.repositories.conversation import ConversationRepository
-from app.repositories.knowledge import KnowledgeRepository
-from app.guardrails import GuardrailsOrchestrator, get_guardrails
-from app.schemas.chat import UserContext, Resource
+from api.app.clients.gemini import GeminiClient, get_gemini_client
+from api.app.services.prompt_manager import PromptManagerService, get_prompt_manager
+from api.app.repositories.conversation import ConversationRepository
+from api.app.repositories.knowledge import KnowledgeRepository
+from api.app.guardrails import GuardrailsOrchestrator, get_guardrails
+from api.app.schemas.chat import UserContext, Resource
 
 logger = logging.getLogger(__name__)
 

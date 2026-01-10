@@ -1,0 +1,163 @@
+version: '3.8'
+
+# Local Supabase Stack for Dave Development & Testing
+# This provides a complete local database for integration tests without hitting cloud
+
+services:
+  # PostgreSQL Database (using standard PostgreSQL, not Supabase image)
+  postgres:
+    image: postgres:15-alpine
+    container_name: dave-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Auto-run simplified local schema on startup (local testing only)
+      - ./docker/local-init.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      # Prompts seed file skipped - has UUID format issues, not needed for Phase 1
+      # - ../../../Dave/supabase/migrations/20251229_dave_system_prompts.sql:/docker-entrypoint-initdb.d/02-prompts.sql:ro
+    networks:
+      - dave-local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgREST API (Supabase REST API)
+  postgrest:
+    image: postgrest/postgrest:v11.2.0
+    container_name: dave-postgrest
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: postgres://postgres:postgres@postgres:5432/postgres
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: super-secret-jwt-token-with-at-least-32-characters
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dave-local
+    restart: unless-stopped
+
+  # Kong API Gateway (Supabase Auth & API Gateway)
+  kong:
+    image: kong:2.8.1
+    container_name: dave-kong
+    ports:
+      - "8000:8000"  # REST API
+      - "8443:8443"  # REST API SSL
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+    volumes:
+      - ./supabase/config/kong.yml:/var/lib/kong/kong.yml:ro
+    depends_on:
+      - postgrest
+    networks:
+      - dave-local
+    restart: unless-stopped
+
+  # pgAdmin for Database Management (Optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dave-pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@employa.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - dave-local
+    restart: unless-stopped
+
+  # Dave FastAPI Service (connects to local DB)
+  dave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dave-service
+    ports:
+      - "8080:8080"
+    environment:
+      ENVIRONMENT: development
+      LOG_LEVEL: DEBUG
+      SERVICE_NAME: dave
+
+      # Local PostgreSQL (via PostgREST)
+      DAVE_SUPABASE_URL: http://postgrest:3000
+      DAVE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      DAVE_SUPABASE_SERVICE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+
+      # Gemini AI (still needs real key)
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: gemini-1.5-pro
+
+      # Redis for rate limiting
+      REDIS_URL: redis://redis:6379
+
+      # API Keys
+      DAVE_API_KEY: dev-dave-api-key
+      ADMIN_API_KEY: dev-admin-api-key
+
+      # JWT Secret
+      SUPABASE_JWT_SECRET: super-secret-jwt-token-with-at-least-32-characters
+    volumes:
+      - ./api:/app/api:ro
+      - ./tests:/app/tests:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgrest:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - dave-local
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for Rate Limiting
+  redis:
+    image: redis:7-alpine
+    container_name: dave-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - dave-local
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres-data:
+  pgadmin-data:
+  redis-data:
+
+networks:
+  dave-local:
+    driver: bridge

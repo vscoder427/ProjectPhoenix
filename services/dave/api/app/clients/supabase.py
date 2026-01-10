@@ -8,7 +8,9 @@ from functools import lru_cache
 
 from supabase import create_client, Client
 
-from app.config import settings
+from api.app.config import get_settings
+
+settings = get_settings()
 
 
 @lru_cache()

@@ -12,9 +12,9 @@ import logging
 from dataclasses import dataclass
 from typing import Optional
 
-from app.guardrails.prompt_injection import PromptInjectionDetector
-from app.guardrails.topic_classifier import TopicClassifier
-from app.guardrails.rate_limiter import RateLimiter
+from api.app.guardrails.prompt_injection import PromptInjectionDetector
+from api.app.guardrails.topic_classifier import TopicClassifier
+from api.app.guardrails.rate_limiter import RateLimiter
 
 logger = logging.getLogger(__name__)
 

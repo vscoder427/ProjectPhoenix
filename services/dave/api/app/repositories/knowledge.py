@@ -10,10 +10,12 @@ import re
 from typing import Optional
 from bs4 import BeautifulSoup
 
-from app.clients.supabase import get_supabase_client
-from app.clients.http_pool import get_http_client
-from app.clients.gemini import get_gemini_client
-from app.config import settings
+from api.app.clients.supabase import get_supabase_client
+from api.app.clients.http_pool import get_http_client
+from api.app.clients.gemini import get_gemini_client
+from api.app.config import get_settings
+
+settings = get_settings()
 
 logger = logging.getLogger(__name__)
 
@@ -278,6 +280,60 @@ class KnowledgeRepository:
             logger.error(f"Error fetching FAQs: {e}")
             return []
 
+    async def get_faqs(
+        self,
+        category_id: Optional[str] = None,
+        featured_only: bool = False,
+        limit: Optional[int] = None
+    ) -> list[dict]:
+        """Get FAQs with optional filtering."""
+        try:
+            query = self.client.table("faqs").select(
+                "id, question, answer, category_id, category_name, display_order, is_featured, is_expert_answer, related_article_ids"
+            )
+
+            # Apply filters
+            if category_id:
+                query = query.eq("category_id", category_id)
+
+            if featured_only:
+                query = query.eq("is_featured", True)
+
+            # Order by display order
+            query = query.order("display_order", desc=False)
+
+            # Apply limit
+            if limit:
+                query = query.limit(limit)
+
+            result = query.execute()
+
+            faqs = []
+            for faq in result.data or []:
+                faq["title"] = faq["question"]
+                faq["excerpt"] = faq["answer"]
+                faq["type"] = "faq"
+                faqs.append(faq)
+
+            return faqs
+
+        except Exception as e:
+            logger.error(f"Error fetching FAQs: {e}")
+            return []
+
+    async def get_categories(self) -> list[dict]:
+        """Get all knowledge base categories."""
+        try:
+            result = self.client.table("kb_categories").select(
+                "id, name, slug, description, icon, display_order, is_active, article_count, faq_count"
+            ).eq("is_active", True).order("display_order").execute()
+
+            return result.data or []
+
+        except Exception as e:
+            logger.error(f"Error fetching categories: {e}")
+            return []
+
     async def get_all_storage_articles(self) -> list[dict]:
         """Get all articles from storage bucket."""
         return await self._load_storage_articles()
@@ -296,6 +352,41 @@ class KnowledgeRepository:
 
         except Exception as e:
             logger.error(f"Error fetching article {filename}: {e}")
+            return None
+
+    async def get_article_by_id(self, article_id: str) -> Optional[dict]:
+        """Get an article by ID from storage bucket."""
+        try:
+            articles = await self._load_storage_articles()
+            for article in articles:
+                # Check if article has an id field or use filename as fallback
+                if article.get("id") == article_id or article.get("filename") == article_id:
+                    # Fetch full content
+                    content = await self._fetch_article_content(article["url"])
+                    article["content"] = content
+                    return article
+            return None
+
+        except Exception as e:
+            logger.error(f"Error fetching article by ID {article_id}: {e}")
+            return None
+
+    async def get_article_by_slug(self, slug: str) -> Optional[dict]:
+        """Get an article by slug from storage bucket."""
+        try:
+            articles = await self._load_storage_articles()
+            for article in articles:
+                # Check if article has a slug field or derive from filename
+                article_slug = article.get("slug") or article.get("filename", "").replace(".md", "")
+                if article_slug == slug:
+                    # Fetch full content
+                    content = await self._fetch_article_content(article["url"])
+                    article["content"] = content
+                    return article
+            return None
+
+        except Exception as e:
+            logger.error(f"Error fetching article by slug {slug}: {e}")
             return None
 
     async def get_recovery_focused_articles(self, limit: int = 10) -> list[dict]:

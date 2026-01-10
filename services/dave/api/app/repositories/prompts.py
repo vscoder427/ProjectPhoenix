@@ -8,7 +8,7 @@ import logging
 from typing import Optional
 from uuid import uuid4
 
-from app.clients.supabase import get_supabase_client
+from api.app.clients.supabase import get_supabase_client
 
 logger = logging.getLogger(__name__)
 

@@ -9,8 +9,10 @@ import logging
 from typing import Optional
 from functools import lru_cache
 
-from app.repositories.prompts import PromptsRepository
-from app.config import settings
+from api.app.repositories.prompts import PromptsRepository
+from api.app.config import get_settings
+
+settings = get_settings()
 
 logger = logging.getLogger(__name__)
 

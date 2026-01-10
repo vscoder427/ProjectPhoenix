@@ -12,16 +12,16 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import StreamingResponse
 from sse_starlette.sse import EventSourceResponse
 
-from app.middleware.auth import AuthContext, verify_api_key, optional_auth, verify_user_or_admin
-from app.services.dave_chat import DaveChatService, get_dave_service
-from app.schemas.chat import (
+from api.app.middleware.auth import AuthContext, verify_api_key, optional_auth, verify_user_or_admin
+from api.app.services.dave_chat import DaveChatService, get_dave_service
+from api.app.schemas.chat import (
     ChatMessageRequest,
     ChatMessageResponse,
     UserContext,
     ConversationSummary,
     ConversationDetail,
 )
-from app.repositories.conversation import ConversationRepository
+from api.app.repositories.conversation import ConversationRepository
 
 logger = logging.getLogger(__name__)
 

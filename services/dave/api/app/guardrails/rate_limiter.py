@@ -12,7 +12,9 @@ from dataclasses import dataclass
 from typing import Optional, Dict
 from collections import defaultdict
 
-from app.config import settings
+from api.app.config import get_settings
+
+settings = get_settings()
 
 logger = logging.getLogger(__name__)
 
@@ -171,16 +173,18 @@ class RateLimiter:
                 logger.debug(f"Cleaned up {len(keys_to_remove)} stale rate limit entries")
 
     def _clean_old_requests(self, key: str, window: int) -> list:
-        """Remove requests older than window and return remaining."""
+        """Return requests within window without modifying storage."""
         now = time.time()
         cutoff = now - window
 
         with self._memory_lock:
-            self._requests[key] = [
+            if key not in self._requests:
+                return []
+            # Return filtered list without modifying storage
+            return [
                 (ts, tokens) for ts, tokens in self._requests[key]
                 if ts > cutoff
             ]
-            return list(self._requests[key])
 
     async def check(
         self,

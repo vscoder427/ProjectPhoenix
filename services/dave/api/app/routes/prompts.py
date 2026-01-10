@@ -9,10 +9,10 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.middleware.auth import AuthContext, verify_admin_key
-from app.repositories.prompts import PromptsRepository
-from app.services.prompt_manager import get_prompt_manager
-from app.schemas.prompts import (
+from api.app.middleware.auth import AuthContext, verify_admin_key
+from api.app.repositories.prompts import PromptsRepository
+from api.app.services.prompt_manager import get_prompt_manager
+from api.app.schemas.prompts import (
     Prompt,
     PromptList,
     PromptUpdate,

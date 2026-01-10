@@ -6,14 +6,14 @@ Provides health, readiness, and liveness checks for Cloud Run.
 
 from fastapi import APIRouter, Depends
 
-from app.clients.supabase import get_supabase_client
-from app.clients.gemini import GeminiClient
-from app.services.prompt_manager import get_prompt_manager
+from api.app.clients.supabase import get_supabase_client
+from api.app.clients.gemini import GeminiClient
+from api.app.services.prompt_manager import get_prompt_manager
 
 router = APIRouter()
 
 
-@router.get("")
+@router.get("/health")
 async def health():
     """Basic health check."""
     return {"status": "healthy"}

@@ -48,9 +48,9 @@ async def add_request_id(request: Request, call_next):
     request_id = request.headers.get("X-Request-Id", str(uuid.uuid4()))
     request.state.request_id = request_id
     adapter = request_logger(logger, request_id)
-    adapter.info("request.start", path=request.url.path, method=request.method)
+    adapter.info("request.start", extra={"path": request.url.path, "method": request.method})
     response = await call_next(request)
-    adapter.info("request.end", status_code=response.status_code)
+    adapter.info("request.end", extra={"status_code": response.status_code})
     response.headers["X-Request-Id"] = request_id
     return response
 

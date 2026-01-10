@@ -8,10 +8,10 @@ Called by n8n workflows to generate contextual nudges for users.
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from app.middleware.auth import verify_api_key, AuthContext
-from app.services.nudge_service import get_nudge_service
-from app.guardrails.rate_limiter import RateLimiter
-from app.schemas.nudge import (
+from api.app.middleware.auth import verify_api_key, AuthContext
+from api.app.services.nudge_service import get_nudge_service
+from api.app.guardrails.rate_limiter import RateLimiter
+from api.app.schemas.nudge import (
     NudgeGenerateRequest,
     NudgeGenerateResponse,
     NudgeBatchRequest,

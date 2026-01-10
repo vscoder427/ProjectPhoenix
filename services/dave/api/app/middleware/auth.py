@@ -14,8 +14,10 @@ from typing import Optional
 from fastapi import HTTPException, Security, Depends
 from fastapi.security import APIKeyHeader, HTTPBearer, HTTPAuthorizationCredentials
 
-from app.config import settings
+from api.app.config import get_settings
 from employa_auth.jwt_validator import get_user_id_from_token
+
+settings = get_settings()
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +96,7 @@ async def verify_admin_key(
     - Bearer token with admin key
 
     Raises HTTPException if not admin.
+    Returns 401 for invalid/missing credentials, 403 for valid non-admin credentials.
     """
     # Try API key first
     key = api_key
@@ -114,9 +117,17 @@ async def verify_admin_key(
             tier="admin",
         )
 
+    # Check if it's a valid non-admin key (Dave API key)
+    if settings.dave_api_key and secrets.compare_digest(key, settings.dave_api_key):
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access required.",
+        )
+
+    # Completely invalid key = authentication failure
     raise HTTPException(
-        status_code=403,
-        detail="Admin access required.",
+        status_code=401,
+        detail="Invalid API key.",
     )
 
 
