@@ -1,0 +1,168 @@
+name: Security Issue
+description: Report a security vulnerability or concern (CONFIDENTIAL)
+title: "[SECURITY] "
+labels: ["type-security", "priority-critical", "status-needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ IMPORTANT - Security Reporting Guidelines
+
+        **For critical vulnerabilities, please email security@employa.work directly instead of creating a public issue.**
+
+        This template is for security improvements, hardening, and non-critical security concerns.
+        For urgent vulnerabilities that could be exploited, use private disclosure via email.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity Level
+      description: How severe is this security concern?
+      options:
+        - Critical (active exploit possible, data breach risk)
+        - High (significant security risk, needs immediate attention)
+        - Medium (security concern, should be addressed soon)
+        - Low (security improvement, nice to have)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: security-type
+    attributes:
+      label: Security Issue Type
+      description: What type of security concern is this?
+      options:
+        - Vulnerability (potential exploit)
+        - Authentication/Authorization Issue
+        - Data Exposure/Privacy Concern
+        - HIPAA Compliance Issue
+        - Injection Attack (SQL, XSS, Command)
+        - Cryptography/Encryption Issue
+        - Dependency Vulnerability
+        - Configuration Security
+        - Access Control Issue
+        - Security Hardening
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: security-description
+    attributes:
+      label: Security Issue Description
+      description: Describe the security concern in detail. Be specific but avoid public exploit details.
+      placeholder: Describe the security issue...
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-components
+    attributes:
+      label: Affected Components
+      description: What parts of the system are affected?
+      placeholder: |
+        - Affected services/APIs
+        - Affected endpoints
+        - Affected data stores
+    validations:
+      required: true
+
+  - type: textarea
+    id: potential-impact
+    attributes:
+      label: Potential Impact
+      description: What could happen if this issue is exploited?
+      placeholder: |
+        - Data that could be exposed
+        - Systems that could be compromised
+        - User impact
+        - HIPAA/compliance implications
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce (if applicable)
+      description: How can this issue be reproduced? Use general terms if sensitive.
+      placeholder: |
+        1. Step 1
+        2. Step 2
+        3. Observe security issue
+
+  - type: checkboxes
+    id: hipaa-compliance
+    attributes:
+      label: HIPAA/Compliance Impact
+      description: Does this affect HIPAA compliance or sensitive data?
+      options:
+        - label: Affects Protected Health Information (PHI)
+        - label: Affects recovery-related sensitive data
+        - label: Affects user authentication/authorization
+        - label: Affects audit logging requirements
+        - label: Affects data encryption requirements
+        - label: No HIPAA compliance impact
+
+  - type: textarea
+    id: recommended-fix
+    attributes:
+      label: Recommended Fix
+      description: If you have suggestions for how to fix this, please share them.
+      placeholder: Describe potential solutions or mitigations...
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Affected Environment
+      description: Where was this issue discovered?
+      options:
+        - Production
+        - Staging
+        - Development
+        - All Environments
+        - Code Review/Audit
+        - Dependency Scan
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: cve-references
+    attributes:
+      label: CVE/Security References
+      description: Link to any CVEs, security advisories, or related reports
+      placeholder: |
+        - CVE-XXXX-XXXXX
+        - GitHub Advisory: GHSA-xxxx-xxxx-xxxx
+        - Related security reports
+
+  - type: textarea
+    id: temporary-mitigation
+    attributes:
+      label: Temporary Mitigation
+      description: Are there any temporary workarounds or mitigations in place?
+      placeholder: Describe any temporary fixes or workarounds...
+
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure & Verification
+      description: Please confirm the following
+      options:
+        - label: I have NOT publicly disclosed details of this vulnerability
+          required: true
+        - label: I understand this will be prioritized based on severity
+          required: true
+        - label: For critical issues, I will also email security@employa.work
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Security Team Response:** This issue will be triaged within 24 hours for critical/high severity items.
+        Medium/low severity items will be addressed in the next security review cycle.
+
+        Thank you for helping keep Employa secure!
