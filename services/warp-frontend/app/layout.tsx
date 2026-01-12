@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { WebVitals } from "@/src/components/web-vitals";
 
 export const metadata: Metadata = {
-  title: "Employa - Firebase Hosting Spike",
-  description: "Testing Next.js 15 SSR with Firebase Hosting and Secret Manager",
+  title: "Employa - Recovery-Focused Job Search",
+  description: "Find recovery-friendly employers and take the next step in your career journey",
 };
 
 export default function RootLayout({
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <WebVitals />
         {children}
       </body>
     </html>
