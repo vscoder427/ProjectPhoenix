@@ -310,7 +310,7 @@ Week 1 acceptance criteria from [#349](https://github.com/employa-work/employa-w
 ### CI/CD Pipeline (Warp)
 - [x] Create `.github/workflows/ci.yml` - Lint, test, build, contract tests
 - [x] Create `.github/workflows/deploy-staging.yml` - Automated Vercel staging deploy
-- [ ] Pipeline runs on PR creation and merge to main (requires PR to test)
+- [x] Pipeline runs on PR creation and merge to main (TESTING IN PROGRESS)
 - [ ] All checks must pass before merge (required status checks)
 
 ### Secrets Migration
