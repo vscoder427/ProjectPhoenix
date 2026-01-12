@@ -34,11 +34,13 @@ describe('Input', () => {
   })
 
   it('supports different input types', () => {
-    const { rerender } = render(<Input type="email" />)
+    const { rerender, container } = render(<Input type="email" />)
     expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email')
 
     rerender(<Input type="password" />)
-    expect(screen.getByRole('textbox', { hidden: true })).toHaveAttribute('type', 'password')
+    // Password inputs don't have textbox role, query by type attribute
+    const passwordInput = container.querySelector('input[type="password"]')
+    expect(passwordInput).toHaveAttribute('type', 'password')
   })
 
   it('is keyboard accessible', async () => {

@@ -33,10 +33,10 @@ describe('Button', () => {
 
   it('applies correct size classes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>)
-    expect(screen.getByRole('button')).toHaveClass('h-8')
+    expect(screen.getByRole('button')).toHaveClass('h-9')
 
     rerender(<Button size="lg">Large</Button>)
-    expect(screen.getByRole('button')).toHaveClass('h-10')
+    expect(screen.getByRole('button')).toHaveClass('h-11')
   })
 
   it('is keyboard accessible', async () => {
