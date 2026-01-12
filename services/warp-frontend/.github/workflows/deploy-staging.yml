@@ -1,0 +1,241 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - preview
+
+env:
+  NODE_VERSION: "22.x"
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  # Pre-deployment validation
+  pre-deploy-checks:
+    name: Pre-Deployment Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "❌ VERCEL_TOKEN is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+            echo "❌ VERCEL_ORG_ID is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "❌ VERCEL_PROJECT_ID is not set"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+
+      - name: Check CI pipeline status
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: context.ref.replace('refs/heads/', ''),
+              event: 'push',
+              status: 'completed',
+              per_page: 10
+            });
+
+            const ciRun = workflowRuns.workflow_runs.find(run =>
+              run.name === 'CI Pipeline' &&
+              run.head_sha === context.sha
+            );
+
+            if (!ciRun) {
+              console.log('⚠️ No CI pipeline run found for this commit');
+              return;
+            }
+
+            if (ciRun.conclusion !== 'success') {
+              core.setFailed(`❌ CI pipeline failed with status: ${ciRun.conclusion}`);
+            } else {
+              console.log('✅ CI pipeline passed');
+            }
+
+  # Deploy to Vercel staging
+  deploy-staging:
+    name: Deploy to Staging (Vercel)
+    runs-on: ubuntu-latest
+    needs: pre-deploy-checks
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.preview-url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment information
+        working-directory: ProjectPhoenix/services/warp-frontend
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project artifacts
+        working-directory: ProjectPhoenix/services/warp-frontend
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          # Vercel automatically injects VERCEL_* env vars
+          NODE_ENV: staging
+
+      - name: Deploy to Vercel
+        id: deploy
+        working-directory: ProjectPhoenix/services/warp-frontend
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOYMENT_URL"
+
+      - name: Add deployment comment to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
+
+            const body = `## 🚀 Staging Deployment
+
+            **Environment:** Staging
+            **Status:** Deployed ✅
+            **URL:** ${deploymentUrl}
+
+            **Branch:** \`${context.ref.replace('refs/heads/', '')}\`
+            **Commit:** \`${context.sha.substring(0, 7)}\`
+
+            **Next steps:**
+            1. Test the deployment at the URL above
+            2. Run smoke tests manually or via E2E suite
+            3. Verify GCP Secret Manager integration
+            4. Approve for production if all checks pass
+            `;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+
+      - name: Add deployment comment to commit
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
+
+            const body = `🚀 Deployed to staging: ${deploymentUrl}
+
+            **Branch:** \`${context.ref.replace('refs/heads/', '')}\`
+            **Environment:** Staging
+            `;
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: body
+            });
+
+  # Post-deployment verification
+  verify-deployment:
+    name: Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for deployment to be ready
+        run: sleep 30  # Give Vercel time to fully propagate
+
+      - name: Health check
+        run: |
+          DEPLOYMENT_URL="${{ needs.deploy-staging.outputs.preview-url }}"
+          echo "Checking health of: $DEPLOYMENT_URL"
+
+          # Attempt health check (retry up to 5 times)
+          for i in {1..5}; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOYMENT_URL" || echo "000")
+            echo "Attempt $i: HTTP $HTTP_STATUS"
+
+            if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "301" ] || [ "$HTTP_STATUS" = "302" ]; then
+              echo "✅ Deployment is healthy (HTTP $HTTP_STATUS)"
+              exit 0
+            fi
+
+            if [ $i -lt 5 ]; then
+              echo "⏳ Waiting 10s before retry..."
+              sleep 10
+            fi
+          done
+
+          echo "❌ Deployment health check failed after 5 attempts"
+          exit 1
+
+      - name: Lighthouse CI (Basic)
+        run: |
+          DEPLOYMENT_URL="${{ needs.deploy-staging.outputs.preview-url }}"
+          echo "⚠️ Lighthouse CI not yet configured"
+          echo "TODO: Add @lhci/cli for performance metrics"
+          # npm install -g @lhci/cli
+          # lhci autorun --url="$DEPLOYMENT_URL"
+
+  # Deployment success notification
+  deployment-success:
+    name: Deployment Success
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, verify-deployment]
+    if: success()
+
+    steps:
+      - name: Summary
+        run: |
+          echo "## 🎉 Staging Deployment Complete"
+          echo ""
+          echo "**Status:** Success ✅"
+          echo "**Environment:** Staging"
+          echo "**URL:** ${{ needs.deploy-staging.outputs.preview-url }}"
+          echo ""
+          echo "**Verification:**"
+          echo "- ✅ Health check passed"
+          echo "- ⚠️ Lighthouse CI pending (future enhancement)"
+          echo ""
+          echo "**Next steps:**"
+          echo "1. Manual smoke testing"
+          echo "2. Review monitoring dashboards (GCP Cloud Logging)"
+          echo "3. Approve for production deployment"
+
+outputs:
+  deployment-url:
+    description: "The URL of the deployed staging environment"
+    value: ${{ jobs.deploy-staging.outputs.preview-url }}
