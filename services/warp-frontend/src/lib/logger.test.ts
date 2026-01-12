@@ -193,14 +193,21 @@ describe('Logger PHI Redaction', () => {
   });
 
   describe('Logger methods', () => {
-    let consoleSpy: jest.SpyInstance;
+    let consoleInfoSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
+    let consoleLogSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      // Spy on all console methods that logger uses
+      consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
     });
 
     afterEach(() => {
-      consoleSpy.mockRestore();
+      consoleInfoSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+      consoleLogSpy.mockRestore();
     });
 
     it('info logs with redacted context', () => {
@@ -210,8 +217,8 @@ describe('Logger PHI Redaction', () => {
         statusCode: 200,
       });
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      const logOutput = JSON.parse(consoleSpy.mock.calls[0][0]);
+      expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
+      const logOutput = JSON.parse(consoleInfoSpy.mock.calls[0][0]);
 
       expect(logOutput.level).toBe('info');
       expect(logOutput.message).toBe('User action');
@@ -225,8 +232,8 @@ describe('Logger PHI Redaction', () => {
         statusCode: 500,
       });
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      const logOutput = JSON.parse(consoleSpy.mock.calls[0][0]);
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      const logOutput = JSON.parse(consoleErrorSpy.mock.calls[0][0]);
 
       expect(logOutput.level).toBe('error');
       expect(logOutput.message).toBe('Error processing email [EMAIL]');
@@ -239,8 +246,8 @@ describe('Logger PHI Redaction', () => {
         name: 'John Doe', // Should be stripped
       });
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      const logOutput = JSON.parse(consoleSpy.mock.calls[0][0]);
+      expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
+      const logOutput = JSON.parse(consoleInfoSpy.mock.calls[0][0]);
 
       expect(logOutput.action).toBe('click');
       expect(logOutput.component).toBe('SubmitButton');
@@ -257,8 +264,8 @@ describe('Logger PHI Redaction', () => {
         50
       );
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      const logOutput = JSON.parse(consoleSpy.mock.calls[0][0]);
+      expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
+      const logOutput = JSON.parse(consoleInfoSpy.mock.calls[0][0]);
 
       expect(logOutput.component).toBe('GET /api/users');
       expect(logOutput.component).not.toContain('email');
@@ -271,8 +278,8 @@ describe('Logger PHI Redaction', () => {
       const error = new Error('Failed to process email user@example.com');
       logger.logError(error, 'UserService', { statusCode: 500 });
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      const logOutput = JSON.parse(consoleSpy.mock.calls[0][0]);
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      const logOutput = JSON.parse(consoleErrorSpy.mock.calls[0][0]);
 
       expect(logOutput.level).toBe('error');
       expect(logOutput.message).toBe('Failed to process email [EMAIL]');
