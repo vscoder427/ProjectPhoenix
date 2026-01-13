@@ -198,7 +198,7 @@ VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
    gcloud secrets add-iam-policy-binding <SECRET_NAME> \
      --member="serviceAccount:<SERVICE_ACCOUNT>" \
      --role="roles/secretmanager.secretAccessor" \
-     --project="employa-production"
+     --project="gen-lang-client-0011584621"
    ```
 
 2. **Add GitHub Actions secrets:**
@@ -315,7 +315,7 @@ Week 1 acceptance criteria from [#349](https://github.com/employa-work/employa-w
 
 ### Secrets Migration
 - [x] Create `scripts/migrate-secrets-to-gcp.ps1` - One-time GCP Secret Manager migration script
-- [ ] Migrate 13 secrets from `.env.workspace` to GCP Secret Manager (requires manual execution)
+- [x] Migrate 12 secrets from `.env.workspace` to GCP Secret Manager (✅ COMPLETE - Project: gen-lang-client-0011584621)
 - [ ] Update Warp to load secrets from GCP in production (Week 2-3)
 - [ ] Verify no `.env.workspace` secrets in production deployments (Week 2-3)
 
@@ -325,7 +325,7 @@ Week 1 acceptance criteria from [#349](https://github.com/employa-work/employa-w
 - [ ] Services load secrets from GCP (no hardcoded credentials) - Week 2-3
 
 ### Known Issues (Pre-Existing, Not Blocking)
-- E2E tests failing due to `globals.css` issue (`ring-3` class not defined)
+- ~~E2E tests failing due to `globals.css` issue (`ring-3` class not defined)~~ - ✅ FIXED (commit 67ba173, issue #355)
 - Coverage at 13.65% baseline (target: 85% by Week 5-6)
 
 ---

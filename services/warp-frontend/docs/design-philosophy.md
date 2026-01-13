@@ -1,362 +1,90 @@
-# Employa Design Philosophy - Recovery-Focused UI
+# Employa Design Philosophy - Project Phoenix (Level 8)
 
-**Purpose:** Design principles for creating supportive, calming, trauma-informed user interfaces for job seekers in recovery and recovery-friendly employers.
+**Purpose:** Comprehensive design strategy for creating a high-end (7-8/10), recovery-focused user experience that balances technological precision with human empathy.
 
-**Last Updated:** 2026-01-12
-
----
-
-## Core Principles
-
-### 1. Calming Language
-
-**Use supportive, non-alarming language.**
-
-| ❌ Don't Say | ✅ Do Say | Why |
-|--------------|-----------|-----|
-| "Error!" | "Let's try again" | Reduces anxiety |
-| "Failed" | "We couldn't complete that" | Non-judgmental |
-| "Invalid input" | "Please check your information" | Gentle guidance |
-| "Warning!" | "Heads up:" | Less alarming |
-| "Fix this" | "Update this" | Empowering |
-
-**Example:**
-```tsx
-// ❌ Bad: Alarming
-<Alert variant="destructive">
-  <AlertTitle>Error!</AlertTitle>
-  <AlertDescription>Invalid email address.</AlertDescription>
-</Alert>
-
-// ✅ Good: Supportive
-<Alert variant="info">
-  <AlertTitle>Let's check that</AlertTitle>
-  <AlertDescription>
-    Your email address should look like: name@example.com
-  </AlertDescription>
-</Alert>
-```
+**Status:** Single Source of Truth for Phase 2 Rebuild
+**Last Updated:** January 12, 2026
 
 ---
 
-### 2. Supportive Tone
+## 1. The Strategic Pivot: From "Clinical" to "Human"
 
-**Acknowledge progress, not just completion.**
+Warp Phase 1 was functionally complete but visually sterile. Project Phoenix pivots from a "Level 5" (Generic SaaS) to a **"Level 8" (Premium Experience)** by addressing these previous mistakes:
 
-| ❌ Don't Say | ✅ Do Say | Why |
-|--------------|-----------|-----|
-| "Task incomplete" | "You're making progress" | Encouraging |
-| "Missing information" | "A few more details will help" | Positive framing |
-| "0% complete" | "Let's get started" | Inviting |
-| "Failed to save" | "We'll try saving again" | Reassuring |
-
-**Example:**
-```tsx
-// ❌ Bad: Negative framing
-<Progress value={30} />
-<p>70% incomplete</p>
-
-// ✅ Good: Positive framing
-<Progress value={30} />
-<p>Great start! 30% complete</p>
-```
+*   **The Compliance Trap:** We no longer let "security/compliance" make the UI look medical or boring. Security is invisible; the experience is front-and-center.
+*   **The "Shadcn" Default:** We move away from out-of-the-box component styles. We use shadcn as a skeleton but apply a custom, opinionated "Luminous" skin.
+*   **Medical Accessibility:** We maintain WCAG AAA standards but execute them with "Universal Design" (Premium like Apple, not clinical like a hospital portal).
 
 ---
 
-### 3. Non-Judgmental Feedback
+## 2. Visual Pillars
 
-**Avoid blame, suggest action.**
+### I. Typography: The "Human Tech" Voice
+We use a dual-font system to bridge the gap between professional engineering and human empathy.
+*   **Headings (h1-h4):** **Plus Jakarta Sans**. Signals modernism, precision, and confidence.
+*   **Body & UI:** **Inter**. Signals clarity, readability, and standard-compliance.
+    *   *Constraint:* 18px base size for accessibility.
 
-| ❌ Don't Say | ✅ Do Say | Why |
-|--------------|-----------|-----|
-| "You forgot to..." | "Let's add..." | No blame |
-| "Wrong password" | "Password doesn't match" | Neutral |
-| "You must..." | "You can..." | Empowering choice |
-| "Fix your profile" | "Update your profile" | Respectful |
+### II. Depth & Material: "Subtle Luminosity"
+We simulate light and physical materials to make the UI feel tangible.
+*   **Subtle Borders:** Replace 1px gray borders with "Inner Light" (`ring-inset ring-white/10`).
+    *   **Accessibility:** Boundaries for inputs and buttons must maintain **3:1 contrast**.
+*   **Glassmorphism:** Use `backdrop-blur-md` and `bg-white/90` for cards and navigation.
+    *   **Accessibility:** 90% opacity minimum for text legibility.
+*   **Luminous Backgrounds:** Page backgrounds use subtle radial gradients (e.g., `bg-gradient-to-br from-slate-50 to-white`) instead of flat white.
 
-**Example:**
-```tsx
-// ❌ Bad: Blaming
-<FormError>You didn't complete the required fields.</FormError>
+### III. Motion & Physics: "Fluid Continuity"
+Motion guides the user's focus through the "Journey of Recovery."
+*   **Spring Physics:** Everything uses spring-based physics for an organic feel.
+    *   *Standard Config:* `stiffness: 300, damping: 30, mass: 1`
+*   **Layout Awareness:** Elements slide into place smoothly (`layout` prop) when containers expand or re-order.
+*   **Accessibility:** **Must respect `prefers-reduced-motion`**. If enabled, movement is replaced by instant fades or static displays.
 
-// ✅ Good: Neutral
-<FormHint>A few more fields will complete your profile.</FormHint>
-```
-
----
-
-### 4. Empowering Choices
-
-**Give users control and ownership.**
-
-| ❌ Don't Say | ✅ Do Say | Why |
-|--------------|-----------|-----|
-| "Select an option" | "Choose what works for you" | Personal agency |
-| "Required field" | "This helps us support you" | Explains why |
-| "Agree to terms" | "Review and accept" | Informed consent |
-| "Submit" | "Continue" or "Save my progress" | Less final |
-
-**Example:**
-```tsx
-// ❌ Bad: Demanding
-<Button>Submit Now</Button>
-
-// ✅ Good: Empowering
-<Button>Save My Progress</Button>
-<Button variant="ghost">I'll finish later</Button>
-```
+### IV. Interaction Feedback: "Sophisticated Support"
+We celebrate progress through premium micro-animations and deeply human copywriting.
+*   **Premium Minimalist:** SVG path-drawing animations for success states.
+*   **Calm Encouragement:** Pair every success with supportive, person-first language.
+    *   *Example:* "We've saved your progress. Take your time."
 
 ---
 
-## Accessibility for Elderly Users
+## 3. Color Palette (Luminous - Warp Derived)
 
-### Typography
-- **Base font size:** 18px (larger than standard 16px)
-- **Line height:** 1.6 (comfortable reading)
-- **Font family:** System fonts (familiar, no custom fonts)
-- **Contrast ratio:** WCAG AAA (7:1 minimum)
-
-### Touch Targets
-- **Minimum size:** 48×48px (generous for touch)
-- **Spacing:** 8px between interactive elements
-- **Button padding:** 16px vertical, 24px horizontal
-
-### Focus Indicators
-- **Ring width:** 3px (highly visible)
-- **Ring color:** Primary color (contrasts with background)
-- **Ring offset:** 2px (clear separation)
-
-### Motion & Animation
-- **Respect `prefers-reduced-motion`:** Disable animations if requested
-- **Subtle transitions:** 200ms duration (not jarring)
-- **No auto-playing videos:** User-initiated only
+| Role | Tailwind Variable | HSL Value | Description |
+| :--- | :--- | :--- | :--- |
+| **Primary** | `primary` | `221.2 83.2% 53.3%` | **Deep Blue.** Trust and stability. |
+| **Accent** | `accent` | `26 80% 52%` | **Warm Orange.** Hope and action. |
+| **Background**| `background` | `210 8% 95%` | **Light Gray-Blue.** Spacious. |
+| **Foreground**| `foreground` | `210 29% 35%` | **Dark Slate Gray.** Content. |
+| **Destructive**| `destructive`| `0 84.2% 60.2%` | **Soft Red.** Non-alarming warning. |
 
 ---
 
-## Color Palette (Recovery-Focused)
+## 4. Writing & Tone Guide
 
-### Primary: Calming Blue
-```css
---primary: 221.2 83.2% 53.3%; /* hsl(221, 83%, 53%) */
-```
-**Why:** Blue evokes calm, trust, stability. Associated with healing.
+### Voice: The "Mentor" Archetype
+We are the guide, not the hero. Our voice is professional but not corporate, supportive but not clinical.
 
-### Destructive: Soft Red (Not Alarming)
-```css
---destructive: 0 84.2% 60.2%; /* hsl(0, 84%, 60%) */
-```
-**Why:** Softer than typical error red. Indicates issue without alarm.
-
-### Muted: Warm Gray
-```css
---muted: 210 40% 96.1%; /* hsl(210, 40%, 96%) */
-```
-**Why:** Gentle, non-intrusive background. Reduces visual noise.
+*   **Active & Conversational:** "Let's get started" vs "Registration is required."
+*   **First-Person Plural:** Use "We" and "Our" to imply partnership.
+*   **Strength-Based:** Focus on "Skills" and "Potential" rather than "History" or "Gaps."
 
 ---
 
-## Component Patterns
+## 5. Accessibility Guardrails (WCAG 2.1 AA+)
 
-### 1. Error Messages
-
-**Show what to do, not just what went wrong.**
-
-```tsx
-// ❌ Bad: Just states the problem
-<FormError>Password must be 8 characters</FormError>
-
-// ✅ Good: Explains what to do
-<FormError>
-  <span className="font-semibold">Let's make your password stronger</span>
-  <ul className="mt-2 space-y-1 text-sm">
-    <li>✓ At least 8 characters</li>
-    <li>✗ Include a number</li>
-    <li>✗ Include a special character</li>
-  </ul>
-</FormError>
-```
-
-### 2. Loading States
-
-**Acknowledge the wait, set expectations.**
-
-```tsx
-// ❌ Bad: Generic spinner
-<Spinner />
-
-// ✅ Good: Informative
-<div className="space-y-2">
-  <Spinner />
-  <p className="text-sm text-muted-foreground">
-    Finding jobs that match your skills...
-  </p>
-  <p className="text-xs text-muted-foreground">
-    This usually takes 3-5 seconds
-  </p>
-</div>
-```
-
-### 3. Empty States
-
-**Invite action, don't highlight absence.**
-
-```tsx
-// ❌ Bad: Negative framing
-<EmptyState>No jobs found. Try different keywords.</EmptyState>
-
-// ✅ Good: Inviting
-<EmptyState>
-  <h3>Let's find your next opportunity</h3>
-  <p>Try searching for:</p>
-  <ul>
-    <li>Job titles (e.g., "Customer Service")</li>
-    <li>Skills (e.g., "Excel, communication")</li>
-    <li>Companies (e.g., "recovery-friendly employers")</li>
-  </ul>
-  <Button>Explore Popular Jobs</Button>
-</EmptyState>
-```
-
-### 4. Success Messages
-
-**Celebrate progress, reinforce positive behavior.**
-
-```tsx
-// ❌ Bad: Minimal feedback
-<Toast>Saved</Toast>
-
-// ✅ Good: Encouraging
-<Toast>
-  <ToastTitle>Great work!</ToastTitle>
-  <ToastDescription>
-    Your profile is looking stronger. Employers can now see your skills.
-  </ToastDescription>
-</Toast>
-```
+Despite the visual upgrades, we maintain strict accessibility standards:
+*   **Contrast (Text):** 4.5:1 ratio for body text.
+*   **Contrast (UI):** 3:1 ratio for input/button boundaries.
+*   **Touch Targets:** 48px minimum height/width for all buttons and links.
+*   **Motion Control:** All spring animations respect OS-level reduced motion settings.
 
 ---
 
-## Form Design Patterns
+## 6. Implementation Checklist
 
-### Field Labels
-```tsx
-// Clear, descriptive labels
-<Label htmlFor="email">
-  Email address
-  <span className="text-sm text-muted-foreground"> (We'll never share this)</span>
-</Label>
-```
-
-### Field Hints
-```tsx
-// Proactive guidance
-<FieldHint>
-  Use an email you check regularly. We'll send job matches here.
-</FieldHint>
-```
-
-### Required vs Optional
-```tsx
-// Explain why, not just mark required
-<Label>
-  Phone number
-  <Badge variant="secondary" className="ml-2">Helps employers reach you</Badge>
-</Label>
-
-// Optional fields: Explicitly state
-<Label>
-  LinkedIn profile
-  <span className="text-sm text-muted-foreground"> (Optional)</span>
-</Label>
-```
-
-### Validation Feedback
-```tsx
-// Real-time, supportive validation
-<FormField>
-  <Input type="password" />
-  <ValidationMessage type="hint">
-    {password.length >= 8 ? "✓ " : "○ "} At least 8 characters
-  </ValidationMessage>
-  <ValidationMessage type="hint">
-    {hasNumber ? "✓ " : "○ "} Include a number
-  </ValidationMessage>
-</FormField>
-```
-
----
-
-## Writing Style Guide
-
-### Voice
-- **Conversational:** "Let's get started" not "Complete registration"
-- **First-person plural:** "We'll" not "The system will"
-- **Active voice:** "Choose your path" not "A path must be selected"
-
-### Tone
-- **Encouraging:** "You're making progress"
-- **Patient:** "Take your time"
-- **Respectful:** "Your privacy matters"
-- **Empowering:** "You decide what to share"
-
-### Word Choice
-- **Recovery-positive:** "in recovery" not "recovering addict"
-- **Person-first:** "person in recovery" not "addict"
-- **Strength-based:** "your skills" not "job history gaps"
-- **Action-oriented:** "Update" not "Fix", "Choose" not "Select"
-
----
-
-## Anti-Patterns to Avoid
-
-### ❌ Don't
-1. **Use red/alarm language** - "ERROR!", "WARNING!", "CRITICAL"
-2. **Blame the user** - "You forgot", "You failed", "You must"
-3. **Use jargon** - "Authenticate", "Submit", "Validate"
-4. **Assume context** - "Click here" (where? why?)
-5. **Rush the user** - "Hurry!", "Limited time!", "Act now!"
-6. **Judge progress** - "Only 10% complete", "You're behind"
-
-### ✅ Do
-1. **Use calm language** - "Let's try again", "Please check"
-2. **Be neutral** - "Let's add", "We can", "Please update"
-3. **Use plain language** - "Sign in", "Save", "Check"
-4. **Give context** - "Save your progress to continue later"
-5. **Respect pace** - "Take your time", "No rush"
-6. **Acknowledge effort** - "Great progress", "You're on track"
-
----
-
-## Implementation Checklist
-
-When creating a new component or page:
-
-- [ ] **Language**: No alarming words ("error", "failed", "wrong")
-- [ ] **Tone**: Supportive, not judgmental
-- [ ] **Typography**: 18px base font, 1.6 line height
-- [ ] **Touch targets**: Minimum 48×48px
-- [ ] **Focus indicators**: 3px ring, visible contrast
-- [ ] **Color contrast**: WCAG AAA (7:1 ratio)
-- [ ] **Motion**: Respects `prefers-reduced-motion`
-- [ ] **Empty states**: Inviting, not highlighting absence
-- [ ] **Errors**: Explain what to do, not just what's wrong
-- [ ] **Success**: Celebrate progress
-
----
-
-## Resources
-
-- **WCAG Guidelines:** https://www.w3.org/WAI/WCAG21/quickref/
-- **Trauma-Informed Design:** https://traumainformeddesign.org/
-- **Plain Language:** https://www.plainlanguage.gov/
-- **Inclusive Components:** https://inclusive-components.design/
-
----
-
-## Examples Repository
-
-See `src/components/examples/` for reference implementations:
-- `RecoveryFocusedForm.tsx` - Form with supportive validation
-- `CalmErrorAlert.tsx` - Non-alarming error messages
-- `ProgressCelebration.tsx` - Encouraging progress indicators
-- `EmpoweringButton.tsx` - Action-oriented button labels
+- [ ] **Type:** Headings in Plus Jakarta Sans? Body at 18px?
+- [ ] **Colors:** Primary Blue (221), Accent Orange (26), Foreground Slate (210)?
+- [ ] **Contrast:** Do interactive elements have a visible 3:1 contrast ring?
+- [ ] **Motion:** Does the component respond to `prefers-reduced-motion`?
+- [ ] **Touch:** Are interactive targets at least 48px?
