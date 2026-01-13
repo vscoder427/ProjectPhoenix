@@ -4,14 +4,14 @@ test.describe('Homepage', () => {
   test('loads successfully', async ({ page }) => {
     await page.goto('/');
 
-    // Check page loads
-    await expect(page).toHaveTitle(/Firebase Hosting.*Spike/i);
+    // Check page loads with correct title
+    await expect(page).toHaveTitle(/Employa/i);
   });
 
   test('displays main heading', async ({ page }) => {
     await page.goto('/');
 
-    // Check main heading is visible
+    // Check main heading is visible (spike page still shows old heading)
     await expect(
       page.getByRole('heading', { name: /Firebase Hosting.*Next\.js 15 SSR Spike/i })
     ).toBeVisible();
