@@ -25,7 +25,32 @@ Use this checklist to create a new service that complies with all standards.
 - [ ] mTLS for service-to-service
 - [ ] HIPAA risk analysis initiated
 
-## Database Security (RLS Policies)
+## Authorization Strategy
+
+**Choose ONE approach for each service:**
+
+### Option A: Application-Layer Authorization (Recommended for GCP-Native Services)
+
+**Use when:**
+- Service uses Cloud SQL (not Supabase)
+- All database access goes through your API (no direct client → DB)
+- You want authorization logic in testable application code
+
+**Requirements:**
+- [ ] ADR created documenting authorization strategy (see [ADR-0002](../services/dave/adr/0002-authorization-application-layer.md) as example)
+- [ ] Auth middleware validates JWT tokens
+- [ ] Repository/service layer enforces user isolation (`WHERE user_id = :current_user_id`)
+- [ ] Tests verify user isolation at API level
+- [ ] No RLS enabled (intentional - authorization in code)
+
+**Reference Implementation:** [Dave service](../../../Dave/api/app/)
+
+### Option B: Row Level Security (RLS) Policies
+
+**Use when:**
+- Service uses Supabase (has `auth.uid()` function)
+- Direct client → database access is possible
+- Defense-in-depth at database layer is required
 
 **Standard:** [database-rls-policies.md](../standards/database-rls-policies.md)
 
