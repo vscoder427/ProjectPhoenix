@@ -83,6 +83,36 @@ All non-2xx responses must use this structure:
 - Use query params for filters: `?status=active&city=baltimore`
 - Use `sort` for ordering: `?sort=created_at:desc`
 
+## Sparse Fieldsets (Partial Responses)
+
+To optimize performance for mobile clients and reduce unnecessary data transfer, all list and retrieve endpoints should support field selection.
+
+- **Parameter:** `fields`
+- **Format:** Comma-separated list of field names.
+- **Behavior:**
+  - If omitted, return the default set of fields (usually all fields defined in the schema).
+  - If present, the response must only include the requested fields.
+  - Nested fields can be requested using dot notation: `?fields=id,name,settings.theme`.
+- **Backend Implementation:** Ideally, this selection is passed down to the database layer (`SELECT id, name`) to reduce I/O. If not feasible, the filtering must occur before JSON serialization.
+
+### Example Request
+`GET /api/v1/jobs?fields=id,title,company.name`
+
+### Example Response
+```json
+{
+  "items": [
+    {
+      "id": "job_123",
+      "title": "Senior Engineer",
+      "company": {
+        "name": "Employa"
+      }
+    }
+  ]
+}
+```
+
 ## Idempotency
 
 - All write endpoints support idempotency
