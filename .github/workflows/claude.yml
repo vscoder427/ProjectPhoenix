@@ -1,0 +1,247 @@
+# Claude Code Action - Unified Workflow
+# Handles: @claude mentions, PR reviews, issue triage
+#
+# Required Secrets:
+#   - ANTHROPIC_API_KEY: Your Anthropic API key (get from console.anthropic.com)
+#
+# Setup: Run `/install-github-app` in Claude Code CLI for easiest setup
+# Docs: https://github.com/anthropics/claude-code-action
+
+name: Claude Code
+
+on:
+  # Respond to @claude mentions in issues and PRs
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+  # Automatic PR review on open/update
+  pull_request:
+    types: [opened, synchronize]
+
+  # Issue triage on new issues
+  issues:
+    types: [opened]
+
+# Prevent concurrent runs on the same PR/issue
+concurrency:
+  group: claude-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  # ============================================
+  # Interactive Mode: Respond to @claude mentions
+  # ============================================
+  claude-mention:
+    name: Respond to @claude
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment') &&
+      contains(github.event.comment.body, '@claude')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Action
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude"
+          # Claude will read CLAUDE.md automatically for project context
+
+  # ============================================
+  # Automation Mode: PR Code Review
+  # ============================================
+  claude-pr-review:
+    name: PR Code Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review this pull request following Employa's standards:
+
+            ## Review Criteria
+
+            ### Code Quality
+            - Code follows existing patterns in the codebase
+            - No unnecessary complexity or over-engineering
+            - Functions are focused and single-purpose
+            - Error handling is appropriate (not excessive)
+
+            ### Security (CRITICAL for HIPAA compliance)
+            - No hardcoded credentials or secrets
+            - No SQL injection vulnerabilities
+            - No XSS vulnerabilities
+            - Proper input validation at system boundaries
+            - PHI data handled appropriately (if applicable)
+
+            ### Testing
+            - New code has appropriate test coverage
+            - Tests are meaningful, not just for coverage numbers
+            - Edge cases are considered
+
+            ### Architecture
+            - Changes align with service responsibilities
+            - No circular dependencies introduced
+            - API contracts maintained
+
+            ## Response Format
+
+            Provide feedback as:
+            1. **Summary**: One sentence overall assessment
+            2. **Strengths**: What's done well (2-3 points)
+            3. **Suggestions**: Specific improvements (if any)
+            4. **Security**: Any security concerns (mark CRITICAL if found)
+            5. **Verdict**: APPROVE / REQUEST_CHANGES / COMMENT
+
+            Be direct and constructive. Don't nitpick style if it matches existing code.
+
+  # ============================================
+  # Automation Mode: Issue Triage
+  # ============================================
+  claude-issue-triage:
+    name: Issue Triage
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Analyze and Label Issue
+        id: triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Analyze this new issue and provide triage information.
+
+            ## Employa Label Schema
+
+            Priority labels (mutually exclusive):
+            - priority-critical: Production outages, security vulnerabilities, data loss
+            - priority-high: Important but not blocking, should address soon
+            - priority-medium: Normal priority work (default)
+            - priority-low: Nice to have, improvements
+
+            Type labels (mutually exclusive):
+            - type-bug: Defects, errors, unexpected behavior
+            - type-task: Feature work, implementation tasks
+            - type-epic: Large features spanning multiple issues
+
+            Special labels:
+            - security: ANY security-related concern (ALWAYS pair with priority-critical)
+            - documentation: Docs improvements
+            - status-blocked: If issue mentions blockers
+
+            ## Your Task
+
+            1. Read the issue title and body
+            2. Determine appropriate labels
+            3. Identify if this is a security issue (exposed credentials, auth bypass, etc.)
+            4. Suggest which service/component this relates to
+
+            Respond with ONLY valid JSON (no markdown):
+            {
+              "priority": "critical|high|medium|low",
+              "type": "bug|task|epic",
+              "is_security": true|false,
+              "additional_labels": ["label1", "label2"],
+              "component": "service name or area",
+              "summary": "one sentence summary of what this issue is about"
+            }
+
+      - name: Apply Labels
+        uses: actions/github-script@v7
+        env:
+          TRIAGE_RESULT: ${{ steps.triage.outputs.result }}
+        with:
+          script: |
+            let result;
+            try {
+              // Try to parse the result - it might be in different formats
+              const rawResult = process.env.TRIAGE_RESULT || '{}';
+              // Extract JSON from potential markdown code blocks
+              const jsonMatch = rawResult.match(/```json?\s*([\s\S]*?)\s*```/) ||
+                               rawResult.match(/\{[\s\S]*\}/);
+              const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : rawResult;
+              result = JSON.parse(jsonStr);
+            } catch (e) {
+              console.log('Could not parse triage result:', e.message);
+              console.log('Raw result:', process.env.TRIAGE_RESULT);
+              return;
+            }
+
+            const labels = [];
+
+            // Add priority label
+            if (result.priority) {
+              labels.push(`priority-${result.priority}`);
+            }
+
+            // Add type label
+            if (result.type) {
+              labels.push(`type-${result.type}`);
+            }
+
+            // Add security label if identified
+            if (result.is_security) {
+              labels.push('security');
+              // Ensure critical priority for security issues
+              if (!labels.includes('priority-critical')) {
+                const prioIndex = labels.findIndex(l => l.startsWith('priority-'));
+                if (prioIndex >= 0) labels.splice(prioIndex, 1);
+                labels.push('priority-critical');
+              }
+            }
+
+            // Add any additional labels
+            if (result.additional_labels && Array.isArray(result.additional_labels)) {
+              labels.push(...result.additional_labels.filter(l =>
+                !l.startsWith('priority-') && !l.startsWith('type-')
+              ));
+            }
+
+            if (labels.length > 0) {
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  labels: labels
+                });
+                console.log('Applied labels:', labels);
+              } catch (e) {
+                console.log('Could not apply labels:', e.message);
+              }
+            }
+
+            // Add a comment with the triage summary
+            if (result.summary) {
+              const comment = `## Automated Triage\n\n` +
+                `**Component:** ${result.component || 'Unknown'}\n` +
+                `**Summary:** ${result.summary}\n\n` +
+                `---\n` +
+                `*Triaged by Claude Code Action*`;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
