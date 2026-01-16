@@ -16,8 +16,8 @@ jobs:
   build-checklist:
     runs-on: windows-latest
     env:
-      SERVICE_NAME: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.service || github.event.release?.name || 'service' }}
-      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || github.event.release?.tag_name || 'manual' }}
+      SERVICE_NAME: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.service || (github.event.release && github.event.release.name) || 'service' }}
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag || (github.event.release && github.event.release.tag_name) || 'manual' }}
     steps:
       - uses: actions/checkout@v4
 

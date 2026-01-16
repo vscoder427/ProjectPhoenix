@@ -144,7 +144,8 @@ If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compl
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: github.event.schedule == '0 9 1 * *' && (github.event_name == 'schedule' && (startsWith(github.run_number, '1') || startsWith(github.run_number, '4') || startsWith(github.run_number, '7') || startsWith(github.run_number, '10')))
+    # Only runs on schedule (monthly on 1st), script checks if it's a quarter start month
+    if: github.event_name == 'schedule'
     steps:
       - name: Quarterly compliance review reminder
         uses: actions/github-script@v7
@@ -154,7 +155,15 @@ If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compl
             const repo = context.repo.repo;
 
             const now = new Date();
-            const quarter = Math.ceil((now.getMonth() + 1) / 3);
+            const month = now.getMonth(); // 0-indexed
+
+            // Only run on quarter start months: Jan (0), Apr (3), Jul (6), Oct (9)
+            if (![0, 3, 6, 9].includes(month)) {
+              console.log(`Skipping quarterly review - not a quarter start month (month: ${month + 1})`);
+              return;
+            }
+
+            const quarter = Math.ceil((month + 1) / 3);
 
             const comment = `
 ## 📋 Quarterly HIPAA Compliance Review
