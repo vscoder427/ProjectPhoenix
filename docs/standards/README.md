@@ -12,6 +12,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 - [Enterprise Architecture Principles](../enterprise-architecture-principles.md)
 - [Service Tiering and Required Standards](service-tiering.md)
 - [API Conventions](api-conventions.md)
+- [API Gateway Patterns](api-gateway-patterns.md) - **NEW** Public-facing service exposure via Google API Gateway
 - [Service Template and Repo Layout](service-template.md)
 - [Service Spec Template](service-spec-template.md)
 - [API Lifecycle Governance](api-lifecycle-governance.md)
@@ -21,6 +22,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 - [Error Codes Registry](error-codes-registry.md)
 - [Config and Secrets Implementation](config-secrets-implementation.md)
 - [Config Change Management](config-change-management.md)
+- [Cloud SQL Patterns](cloud-sql-patterns.md) - Database connectivity, asyncpg, migrations
 - [Infrastructure as Code (Terraform)](iac-terraform.md)
 
 ## Security Controls
