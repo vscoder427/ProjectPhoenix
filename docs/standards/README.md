@@ -25,6 +25,7 @@ Organized navigation for the standards library. Files are grouped by discipline 
 
 ## Security Controls
 
+- [Security Scanning](security/security-scanning.md) - **NEW** SAST, SCA, container scanning, pre-commit hooks
 - [Security and Secrets](security/security-secrets.md)
 - [Auth and JWT](security/auth-jwt.md)
 - [Secrets Access Policy](security/secrets-access-policy.md)

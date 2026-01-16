@@ -24,8 +24,46 @@ This standard defines CI/CD pipelines, environments, and deployment practices fo
 
 ## CI Workflow
 
+### Required Jobs
+
+| Job | Tools | Failure Policy |
+|-----|-------|----------------|
+| **Lint & Type Check** | Ruff, Pyright (Python) / ESLint (JS) | Block merge |
+| **Unit Tests** | pytest / Jest | Block merge |
+| **SAST** | Bandit, Semgrep | Block on HIGH |
+| **SCA** | pip-audit / npm audit | Block on CRITICAL |
+| **Container Scan** | Trivy | Block on CRITICAL unfixed |
+| **Build Validation** | Docker build | Block merge |
+
+### Security Scanning Requirements
+
+All services MUST include security scanning in CI:
+
+```yaml
+# Python services
+security-scan:
+  steps:
+    - run: bandit -r app/ -ll
+    - run: semgrep --config=auto app/
+    - run: pip-audit --strict
+
+# Container scanning (any service with Dockerfile)
+container-security:
+  steps:
+    - uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: '${{ service }}:scan'
+        severity: 'CRITICAL,HIGH'
+        exit-code: '1'
+        ignore-unfixed: true
+```
+
+See [security/security-scanning.md](security/security-scanning.md) for complete configuration.
+
+### CI Checks
+
 - Lint + tests + security scans (SAST/SCA)
-- Container scanning and IaC scanning required
+- Container scanning (Trivy) required for Dockerized services
 - Version file validation (check `__version__.py` exists)
 - Sunset version check (no expired API versions)
 - All checks required before merge

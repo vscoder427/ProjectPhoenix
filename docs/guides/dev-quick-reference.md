@@ -10,6 +10,7 @@ Copy this checklist into your PR description or use it while working on an issue
 - [ ] Dependencies identified (no blockers)
 - [ ] Branch created: `fix/issue-{num}-{desc}` or `feat/issue-{num}-{desc}`
 - [ ] Local environment working (`pytest` passes, service starts)
+- [ ] Pre-commit hooks installed (see First-Time Setup below)
 
 ## Implementation
 
@@ -92,6 +93,27 @@ Copy this checklist into your PR description or use it while working on an issue
 
 ---
 
+## First-Time Setup
+
+**Install pre-commit hooks (required for all developers):**
+
+```bash
+# One-time installation
+pip install pre-commit detect-secrets
+pre-commit install
+pre-commit install --hook-type commit-msg
+
+# Verify installation
+pre-commit run --all-files
+```
+
+Pre-commit hooks will:
+- Block commits containing secrets/credentials
+- Enforce conventional commit messages
+- Check for merge conflicts and large files
+
+See [security/security-scanning.md](../standards/security/security-scanning.md) for full security tooling documentation.
+
 ## Quick Commands
 
 ```bash
@@ -100,6 +122,10 @@ pytest --cov=app --cov-report=term-missing
 
 # Lint & Format
 ruff check app/ && ruff format app/
+
+# Security scan (manual)
+bandit -r app/ -ll
+semgrep --config=auto app/
 
 # Create PR
 git push -u origin fix/issue-{num}-{desc}
