@@ -46,18 +46,18 @@ jobs:
                 });
 
                 for (const issue of issues) {
-                  const comment = `
-## 🔔 Milestone Deadline Approaching
-
-**Milestone:** ${milestone.title}
-**Due:** ${milestone.due_on.split('T')[0]} (${daysUntilDue} day${daysUntilDue !== 1 ? 's' : ''} remaining)
-**Open Issues:** ${milestone.open_issues}
-
-Please review the checklist in this issue and update your progress.
-
----
-*This is an automated reminder from the Vertex AI Migration workflow.*
-                  `;
+                  const comment = [
+                    '## 🔔 Milestone Deadline Approaching',
+                    '',
+                    `**Milestone:** ${milestone.title}`,
+                    `**Due:** ${milestone.due_on.split('T')[0]} (${daysUntilDue} day${daysUntilDue !== 1 ? 's' : ''} remaining)`,
+                    `**Open Issues:** ${milestone.open_issues}`,
+                    '',
+                    'Please review the checklist in this issue and update your progress.',
+                    '',
+                    '---',
+                    '*This is an automated reminder from the Vertex AI Migration workflow.*'
+                  ].join('\n');
 
                   // Check if we already commented this week
                   const { data: existingComments } = await github.rest.issues.listComments({
@@ -110,27 +110,27 @@ Please review the checklist in this issue and update your progress.
               const now = new Date();
               const monthName = now.toLocaleString('default', { month: 'long' });
 
-              const comment = `
-## 📅 Monthly HIPAA Compliance Check
-
-**Month:** ${monthName} ${now.getFullYear()}
-
-### Action Items:
-- [ ] Verify Google Cloud BAA is still active
-- [ ] Check BAA expiration date (should be in compliance docs)
-- [ ] If expiring within 90 days, initiate renewal process
-- [ ] Review any changes to PHI data flows
-- [ ] Confirm all services still covered by BAA
-
-### BAA Location:
-\`ProjectPhoenix\\docs\\compliance\\baas\\google-cloud-baa.pdf\`
-
-### Next Actions:
-If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compliance"
-
----
-*This is an automated monthly reminder from the Vertex AI Migration workflow.*
-              `;
+              const comment = [
+                '## 📅 Monthly HIPAA Compliance Check',
+                '',
+                `**Month:** ${monthName} ${now.getFullYear()}`,
+                '',
+                '### Action Items:',
+                '- [ ] Verify Google Cloud BAA is still active',
+                '- [ ] Check BAA expiration date (should be in compliance docs)',
+                '- [ ] If expiring within 90 days, initiate renewal process',
+                '- [ ] Review any changes to PHI data flows',
+                '- [ ] Confirm all services still covered by BAA',
+                '',
+                '### BAA Location:',
+                '`ProjectPhoenix\\docs\\compliance\\baas\\google-cloud-baa.pdf`',
+                '',
+                '### Next Actions:',
+                'If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compliance"',
+                '',
+                '---',
+                '*This is an automated monthly reminder from the Vertex AI Migration workflow.*'
+              ].join('\n');
 
               await github.rest.issues.createComment({
                 owner,
@@ -165,38 +165,38 @@ If BAA expires soon, create a new issue: "Renew Google Cloud BAA for HIPAA Compl
 
             const quarter = Math.ceil((month + 1) / 3);
 
-            const comment = `
-## 📋 Quarterly HIPAA Compliance Review
-
-**Quarter:** Q${quarter} ${now.getFullYear()}
-
-### Review Checklist:
-- [ ] Review access controls for Dave service
-  - [ ] Verify service account permissions (should be ONLY aiplatform.user + logging.logWriter)
-  - [ ] Review who has access to Dave Cloud Run service
-  - [ ] Check for any unauthorized access in audit logs
-- [ ] Audit log review
-  - [ ] Review PHI access patterns in BigQuery
-  - [ ] Check for anomalies in Vertex AI API usage
-  - [ ] Verify audit log retention policy still in effect
-- [ ] Documentation updates
-  - [ ] Update HIPAA compliance report if anything changed
-  - [ ] Review and update PHI data flow diagram
-  - [ ] Verify all BAAs still active and current
-- [ ] Security review
-  - [ ] Check for any exposed secrets (should be none)
-  - [ ] Review Cloud Run service configuration
-  - [ ] Verify encryption in transit and at rest
-
-### Compliance Report Location:
-\`ProjectPhoenix\\docs\\compliance\\dave-hipaa-compliance-report.md\`
-
-### Next Steps:
-After completing review, comment on this issue with findings and any corrective actions taken.
-
----
-*This is an automated quarterly reminder from the Vertex AI Migration workflow.*
-            `;
+            const comment = [
+              '## 📋 Quarterly HIPAA Compliance Review',
+              '',
+              `**Quarter:** Q${quarter} ${now.getFullYear()}`,
+              '',
+              '### Review Checklist:',
+              '- [ ] Review access controls for Dave service',
+              '  - [ ] Verify service account permissions (should be ONLY aiplatform.user + logging.logWriter)',
+              '  - [ ] Review who has access to Dave Cloud Run service',
+              '  - [ ] Check for any unauthorized access in audit logs',
+              '- [ ] Audit log review',
+              '  - [ ] Review PHI access patterns in BigQuery',
+              '  - [ ] Check for anomalies in Vertex AI API usage',
+              '  - [ ] Verify audit log retention policy still in effect',
+              '- [ ] Documentation updates',
+              '  - [ ] Update HIPAA compliance report if anything changed',
+              '  - [ ] Review and update PHI data flow diagram',
+              '  - [ ] Verify all BAAs still active and current',
+              '- [ ] Security review',
+              '  - [ ] Check for any exposed secrets (should be none)',
+              '  - [ ] Review Cloud Run service configuration',
+              '  - [ ] Verify encryption in transit and at rest',
+              '',
+              '### Compliance Report Location:',
+              '`ProjectPhoenix\\docs\\compliance\\dave-hipaa-compliance-report.md`',
+              '',
+              '### Next Steps:',
+              'After completing review, comment on this issue with findings and any corrective actions taken.',
+              '',
+              '---',
+              '*This is an automated quarterly reminder from the Vertex AI Migration workflow.*'
+            ].join('\n');
 
             // Create a new issue for the quarterly review
             await github.rest.issues.create({
